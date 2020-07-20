@@ -10,13 +10,14 @@
 #include <list>
 #include "ofxMidiMessage.h"
 #include "ofMain.h"
-#include "MidiNoteSphere.hpp"
 #include "MidiNoteConcrete.hpp"
+#include "MidiNoteSphere.hpp"
+#include "MidiNoteLight.hpp"
 
 class MidiNotes: public std::list<unique_ptr<MidiNote>> {
     
 public:
-    void    processMidiNoteOn(const ofxMidiMessage & message, const ofColor & color);
+    void    processMidiNoteOn(const ofxMidiMessage & message);
     void    processMidiNoteOff(const ofxMidiMessage & message);
     void    processMidiControlChange(const ofxMidiMessage & message);
     void    update();

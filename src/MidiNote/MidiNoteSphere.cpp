@@ -10,15 +10,22 @@
 float MidiNoteSphere::_key_width = 0.f;
 float MidiNoteSphere::_velocity_height = 0.f;
 float MidiNoteSphere::_threshold = 0.f;
+ofColor MidiNoteSphere::_base_color = ofColor(62, ofRandom( 0, 127 ), ofRandom(200,255));
 
-MidiNoteSphere::MidiNoteSphere(MidiNote * midi_note, const ofColor & color) : MidiNoteDecorator(midi_note) {
-    _color = color;
+MidiNoteSphere::MidiNoteSphere(MidiNote * midi_note) : MidiNoteDecorator(midi_note) {
+    _color = _base_color;
     setPosition((_midi_note->getPitch() - 21) * _key_width, _frame_height, 0);
     _min_y = _frame_height - (_midi_note->getVelocity() + 28) * _velocity_height;
     _threshold = _frame_height - 28 * _velocity_height;
     _decrease_y = true;
 
-    setRadius(_midi_note->getVelocity() / 10 + 5.f);
+    setRadius(_midi_note->getVelocity() / 5 + 5.f);
+}
+
+void MidiNoteSphere::updateGlobal() {
+    //_base_color.r = (_base_color.r + 1) % 62;
+    _base_color.g = (_base_color.g + 1) % 127;
+    _base_color.b = 200 + (_base_color.b - 199) % 55;
 }
 
 void MidiNoteSphere::setFrame(int width, int height) {
@@ -27,16 +34,8 @@ void MidiNoteSphere::setFrame(int width, int height) {
     MidiNoteDecorator::setFrame(width, height);
 }
 
-ofColor MidiNoteSphere::getColor() const {
-    return _color;
-}
-
 bool    MidiNoteSphere::toDelete() const {
     return getY() > _frame_height && _midi_note->toDelete();
-}
-
-bool  MidiNoteSphere::toDraw() const {
-    return true;
 }
 
 void  MidiNoteSphere::setOff() {
@@ -56,6 +55,7 @@ void  MidiNoteSphere::newPress(int velocity) {
 void MidiNoteSphere::update() {
     _midi_note->update();
     
+    // Moving...
     float amount = 0.f;
     
      if (_decrease_y) { // Moving upwards
@@ -80,6 +80,7 @@ void MidiNoteSphere::update() {
 }
 
 void  MidiNoteSphere::draw() {
+    ofSetColor(_color);
     ofSpherePrimitive::draw();
     _midi_note->draw();
 }

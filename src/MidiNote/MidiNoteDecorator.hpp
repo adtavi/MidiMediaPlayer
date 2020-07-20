@@ -19,6 +19,7 @@ protected:
     
 public:
     MidiNoteDecorator(MidiNote * midi_note);
+    ~MidiNoteDecorator();
     
     static void         setFrame(int width, int height);
 

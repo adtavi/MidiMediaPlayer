@@ -12,6 +12,10 @@
 class MidiNoteConcrete: public MidiNote {
     
 private:
+    int                 _pitch;             // Pitch value
+    int                 _velocity;          // Velocity values
+    bool                _on;                // Whether the key is still being pressed
+    static bool         _pedal;             // Whether the pedal is being pressed
     
 public:
     MidiNoteConcrete(int pitch, int velocity);
@@ -19,9 +23,7 @@ public:
     virtual bool        isOn() const override;
     virtual int         getPitch() const override;
     virtual int         getVelocity() const override;
-    virtual ofColor     getColor() const override;
     virtual bool        toDelete() const override;
-    virtual bool        toDraw() const override;
     virtual void        setOff() override;
     virtual void        newPress(int velocity) override;
     virtual void        update() override;

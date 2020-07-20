@@ -7,7 +7,6 @@
 
 #pragma once
 
-#include <stdio.h>
 #include "ofMain.h"
 #include "MidiNoteDecorator.hpp"
 
@@ -20,16 +19,15 @@ private:
     static float    _velocity_height;   // Amount of height for each velocity value
     static float    _threshold;
     ofColor         _color;
+    static ofColor  _base_color;
     
 public:
-    MidiNoteSphere(MidiNote * midi_note, const ofColor & color);
+    MidiNoteSphere(MidiNote * midi_note);
     
+    static void     updateGlobal();
     static void     setFrame(int width, int height);
     
-    virtual ofColor getColor() const override;
-    virtual bool    toDelete() const override;
-    virtual bool    toDraw() const override;
-    
+    virtual bool    toDelete() const override;    
     virtual void    setOff() override;
     virtual void    newPress(int velocity) override;
     virtual void    update() override;

@@ -7,7 +7,7 @@
 
 #include "MidiNotes.hpp"
 
-void MidiNotes::processMidiNoteOn(const ofxMidiMessage & message, const ofColor & color) {
+void MidiNotes::processMidiNoteOn(const ofxMidiMessage & message) {
     auto it = std::find_if(begin(), end(), [&message](const std::unique_ptr<MidiNote> & midi_note){
         return midi_note.get()->getPitch() == message.pitch;
     });
@@ -16,7 +16,8 @@ void MidiNotes::processMidiNoteOn(const ofxMidiMessage & message, const ofColor 
         (*it).get()->newPress(message.velocity);           // Key pressed again
     } else {
         MidiNoteConcrete * midi_note_concrete = new MidiNoteConcrete(message.pitch, message.velocity);
-        push_back(std::move(std::make_unique<MidiNoteSphere>(midi_note_concrete, color)));
+        MidiNoteSphere * midi_note_sphere = new MidiNoteSphere(midi_note_concrete);
+        push_back(std::move(std::make_unique<MidiNoteLight>(midi_note_sphere)));
     }
 }
 

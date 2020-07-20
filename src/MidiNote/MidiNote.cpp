@@ -9,10 +9,7 @@
 
 bool    MidiNote::_pedal = false;
 
-MidiNote::MidiNote(int pitch, int velocity) : _pitch(pitch), _velocity(velocity), _on(true) {
-};
-
-void MidiNote::setPedal(bool pedal) {
+void    MidiNote::setPedal(bool pedal) {
     _pedal = pedal;
 }
 

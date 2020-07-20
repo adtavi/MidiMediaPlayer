@@ -7,8 +7,12 @@
 
 #include "MidiNoteConcrete.hpp"
 
+bool    MidiNoteConcrete::_pedal = false;
 
-MidiNoteConcrete::MidiNoteConcrete(int pitch, int velocity) : MidiNote(pitch, velocity) {
+MidiNoteConcrete::MidiNoteConcrete(int pitch, int velocity) : MidiNote() {
+    _pitch = pitch;
+    _velocity = velocity;
+    _on = true;
 }
 
 bool    MidiNoteConcrete::isOn() const {
@@ -23,16 +27,8 @@ int     MidiNoteConcrete::getVelocity() const {
     return _velocity;
 }
 
-ofColor MidiNoteConcrete::getColor() const {
-    return ofColor(0.f,0.f,0.f);
-}
-
 bool    MidiNoteConcrete::toDelete() const {
     return !_on;
-}
-
-bool    MidiNoteConcrete::toDraw() const {
-    return false;
 }
 
 void    MidiNoteConcrete::setOff() {
