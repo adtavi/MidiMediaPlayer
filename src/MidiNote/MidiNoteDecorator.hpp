@@ -14,8 +14,6 @@ class MidiNoteDecorator: public MidiNote {
     
 protected:
     MidiNote *          _midi_note;
-    static int          _frame_width;
-    static int          _frame_height;
     
 public:
     MidiNoteDecorator(MidiNote * midi_note);

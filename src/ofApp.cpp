@@ -23,8 +23,6 @@ void ofApp::setup(){
     _midi_in.setVerbose(false);
     
     MidiNote::setPedal(false);
-    MidiNoteSphere::setFrame(ofGetWidth(), ofGetHeight());
-    MidiNoteLight::setFrame(ofGetWidth(), ofGetHeight());
     
     ofFill();
     
@@ -35,12 +33,12 @@ void ofApp::setup(){
     
     // Diffuse light
     ofSetSmoothLighting(true);
-    _light.setAmbientColor(ofColor(21, 21, 21));
-    _light.setDiffuseColor(ofColor(21, 21, 21) );
-    _light.setAttenuation(1.f, 0.f, 0.f);
+    _light.setAmbientColor(ofColor(31, 31, 31));
+    _light.setDiffuseColor(ofColor(31, 31, 31));
     _light.setPosition(ofGetWidth()/2, ofGetHeight()/5, 0);
     _light.enable();
 
+    ofEnableDepthTest();
     ofEnableLighting();
 }
 

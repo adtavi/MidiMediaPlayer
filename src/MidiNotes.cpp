@@ -17,7 +17,8 @@ void MidiNotes::processMidiNoteOn(const ofxMidiMessage & message) {
     } else {
         MidiNoteConcrete * midi_note_concrete = new MidiNoteConcrete(message.pitch, message.velocity);
         MidiNoteSphere * midi_note_sphere = new MidiNoteSphere(midi_note_concrete);
-        push_back(std::move(std::make_unique<MidiNoteLight>(midi_note_sphere)));
+        MidiNoteLight * midi_note_light = new MidiNoteLight(midi_note_sphere);
+        push_back(std::move(std::make_unique<MidiNoteModel>(midi_note_light)));
     }
 }
 

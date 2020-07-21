@@ -11,8 +11,9 @@
 #include "ofxMidiMessage.h"
 #include "ofMain.h"
 #include "MidiNoteConcrete.hpp"
-#include "MidiNoteSphere.hpp"
 #include "MidiNoteLight.hpp"
+#include "MidiNoteModel.hpp"
+#include "MidiNoteSphere.hpp"
 
 class MidiNotes: public std::list<unique_ptr<MidiNote>> {
     
