@@ -9,6 +9,7 @@
 
 MidiNoteContainer::MidiNoteContainer() {
     _midi_note_global.push_back(std::move(std::make_unique<MidiNoteGlobalParticles>()));
+    _midi_note_global.push_back(std::move(std::make_unique<MidiNoteGlobalLight>()));
 }
 
 void MidiNoteContainer::processMidiNoteOn(const ofxMidiMessage & message) {
@@ -16,7 +17,7 @@ void MidiNoteContainer::processMidiNoteOn(const ofxMidiMessage & message) {
     auto it = std::find_if(_midi_notes.begin(), _midi_notes.end(), [&message](const std::unique_ptr<MidiNote> & midi_note){
         return midi_note.get()->getPitch() == message.pitch;
     });
-
+    
     if (it != _midi_notes.end()) {   // If the note is on the container
         (*it).get()->newPress(message.velocity);           // Key pressed again
     } else {

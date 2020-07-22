@@ -12,14 +12,19 @@
 
 class MidiNoteModel: public ofxAssimpModelLoader, public MidiNoteDecorator {
 private:
-    float           _key_width;         // Amount of width for each key
-    ofColor         _color;
-    float           _angle;
+    static constexpr float  _boom_rate = 5.0f;
+    static constexpr float  _angle_rate = 1.0f;
+
+    float                   _key_width;         // Amount of width for each key
+    ofColor                 _color;
+    float                   _angle;
+    float                   _max_y;
     
-    void            loadModel();
+    void                    calcY();
+    
 public:
     MidiNoteModel(MidiNote * midi_note);
-        
+    
     virtual bool    toDelete() const override;
     virtual void    setOff() override;
     virtual void    newPress(int velocity) override;

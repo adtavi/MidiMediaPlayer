@@ -7,13 +7,14 @@
 
 #pragma once
 
+#include "of3dPrimitives.h"
+#include "ofMaterial.h"
 #include "MidiNoteDecorator.hpp"
 
 class MidiNoteSphere: public ofSpherePrimitive, public MidiNoteDecorator, public ofMaterial {
 private:
     float           _min_y;             // Maximum position y
     bool            _decrease_y;        // Ball moving upwards
-    
     float           _velocity_height;   // Amount of height for each velocity value
     float           _threshold;         // Threshold for slowing down sphere falling
     ofColor         _color;             // Ball color

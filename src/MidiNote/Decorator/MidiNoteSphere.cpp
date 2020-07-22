@@ -44,7 +44,7 @@ void  MidiNoteSphere::setOff() {
 
 void  MidiNoteSphere::newPress(int velocity) {
     _midi_note->newPress(velocity);
-
+    
     _min_y = ofGetHeight() - _midi_note->getVelocity() * _velocity_height;
     _decrease_y = getY() > _min_y;
     
@@ -57,10 +57,10 @@ void MidiNoteSphere::update() {
     // Moving...
     float amount = 0.f;
     
-     if (_decrease_y) { // Moving upwards
+    if (_decrease_y) { // Moving upwards
         amount = -10 * _velocity_height;
         _decrease_y = getY() > _min_y;
-     } else {
+    } else {
         if (_midi_note->isPedal() || _midi_note->isOn()) {
             
             if (getY() > ofGetHeight() - 28 * _velocity_height) { // threshold

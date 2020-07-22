@@ -6,20 +6,18 @@
 //
 #pragma once
 
-#include "ofMain.h"
-
 class MidiNote {
-   
+    
 protected:
     static bool             _pedal;             // Whether the pedal is being pressed
     static constexpr int    _num_keys = 87;     // Number of keys on the keyboard
     static constexpr int    _min_pitch = 21;    // Pitch value of first key [21- 108]
     static constexpr int    _num_vel = 127;     // Keyboard has 99 degrees of velocity
-
+    
 public:
     MidiNote() = default;
     virtual             ~MidiNote() = default;
-        
+    
     static void         setPedal(bool pedal);
     static bool         isPedal();
     

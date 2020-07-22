@@ -7,17 +7,20 @@
 
 #pragma once
 
-#include "MidiNoteDecorator.hpp"
+#include "of3dPrimitives.h"
+#include "ofMaterial.h"
 #include <tuple>
 
 class MidiNoteParticle: public ofPlanePrimitive, ofMaterial {
 private:
-    glm::vec3   _vel;
-        
+    static constexpr float  _min_z = -100;
+    static constexpr float  _max_z = 100;
+    glm::vec3               _velocity;
+    
 public:
     MidiNoteParticle();
-      
-    void        init();
-    void        update();
-    void        draw();
+    
+    void                    init();
+    void                    update();
+    void                    draw();
 };

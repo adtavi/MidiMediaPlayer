@@ -19,7 +19,6 @@ bool    MidiNoteDecorator::isOn() const {
 
 int     MidiNoteDecorator::getPitch() const {
     return _midi_note->getPitch();
-
 }
 
 int     MidiNoteDecorator::getVelocity() const {

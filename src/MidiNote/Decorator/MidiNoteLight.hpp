@@ -7,12 +7,23 @@
 
 #pragma once
 
+#include "ofAppRunner.h"
+#include "ofLight.h"
 #include "MidiNoteDecorator.hpp"
 
 class MidiNoteLight: public ofLight, public MidiNoteDecorator {
 private:
-    ofColor         _color;
+    static constexpr float  _boom_rate = 5.0f;
+    static constexpr float  _max_angle = 20.f;
+    static constexpr float  _min_angle = 10.f;
+    static constexpr float  _angle_rate = .25f;
     
+    ofColor                 _color;
+    float                   _angle;
+    float                   _max_y;
+    
+    void                    calcY();
+
 public:
     MidiNoteLight(MidiNote * midi_note);
         

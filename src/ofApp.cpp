@@ -4,7 +4,7 @@
 void ofApp::setup(){
     ofSetVerticalSync(true);
     ofBackground(0, 0, 0);
-    ofSetLogLevel(OF_LOG_VERBOSE);
+    ofSetLogLevel(OF_LOG_SILENT);
     
     // print input ports to console
     _midi_in.listInPorts();
@@ -33,11 +33,6 @@ void ofApp::setup(){
     
     // Diffuse light
     ofSetSmoothLighting(true);
-    _light.setAmbientColor(ofColor(31, 31, 31));
-    _light.setDiffuseColor(ofColor(31, 31, 31));
-    _light.setPosition(ofGetWidth()/2, ofGetHeight()/5, 0);
-    _light.enable();
-
     ofEnableDepthTest();
     ofEnableLighting();
 }
@@ -46,7 +41,7 @@ void ofApp::setup(){
 void ofApp::update(){
     _elapsed_update = (ofGetElapsedTimeMicros() - _elapsed_time);
     _elapsed_time = ofGetElapsedTimeMicros();
-
+    
     MidiNoteSphere::updateGlobal();
     
     while (!_midi_messages.empty()) {

@@ -9,11 +9,9 @@
 class MidiNoteGlobal {
 public:
     virtual             ~MidiNoteGlobal() = default;
-
     virtual void        midiNoteOn() = 0;
     virtual void        midiNoteOff() = 0;
     virtual void        midiControlChange() = 0;
-
     virtual void        update() = 0;
     virtual void        draw() = 0;
     virtual bool        toDelete() const = 0;

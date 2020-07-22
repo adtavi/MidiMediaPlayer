@@ -11,8 +11,8 @@ MidiNoteParticle::MidiNoteParticle() {
     // Material
     setAmbientColor(ofFloatColor::black);
     setDiffuseColor(ofFloatColor::gold);
-    setSpecularColor(ofFloatColor::red);
-    setShininess(24);
+    setSpecularColor(ofFloatColor::gold);
+    setShininess(0);
     
     // Size
     setWidth(2.0);
@@ -21,9 +21,9 @@ MidiNoteParticle::MidiNoteParticle() {
 
 void    MidiNoteParticle::init() {
     // Random velocity
-    _vel.x = ofRandom(-0.2, 0.2);
-    _vel.y = ofRandom(0, 0.6);
-    _vel.z = ofRandom(-0.2, 0.2);
+    _velocity.x = ofRandom(-0.2, 0.2);
+    _velocity.y = ofRandom(0, 0.6);
+    _velocity.z = 0;
     
     // Initial random pos
     setPosition(ofRandom(0, ofGetWidth()), ofRandom(0, ofGetHeight()), 0);
@@ -34,20 +34,20 @@ void    MidiNoteParticle::init() {
 
 void    MidiNoteParticle::update() {
     // Update position
-    setPosition(getPosition() + _vel);
+    setPosition(getPosition() + _velocity);
     
     // If it went out of screen, move it upwards
-    if (getY() + _vel.y > ofGetHeight()) {
+    if (getY() + _velocity.y > ofGetHeight()) {
         setPosition(getX(), 0, getZ());
     }
     
     // Check if it goes out of bound for width
     if (getX() > ofGetWidth()) {
         setPosition(ofGetWidth(), getY(), getZ());
-        _vel.x *= -1.0;
+        _velocity.x *= -1.0;
     } else if (getX() < 0) {
         setPosition(0, getY(), getZ());
-        _vel.x *= -1.0;
+        _velocity.x *= -1.0;
     }
 }
 

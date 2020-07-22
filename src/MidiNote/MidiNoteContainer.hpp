@@ -8,16 +8,19 @@
 #pragma once
 
 #include <list>
+#include <memory>
+
 #include "ofxMidiMessage.h"
 #include "MidiNoteConcrete.hpp"
 #include "MidiNoteLight.hpp"
 #include "MidiNoteModel.hpp"
 #include "MidiNoteGlobalParticles.hpp"
+#include "MidiNoteGlobalLight.hpp"
 #include "MidiNoteSphere.hpp"
 
 class MidiNoteContainer {
-    std::list<unique_ptr<MidiNote>>         _midi_notes;
-    std::list<unique_ptr<MidiNoteGlobal>>   _midi_note_global;
+    std::list<std::unique_ptr<MidiNote>>         _midi_notes;
+    std::list<std::unique_ptr<MidiNoteGlobal>>   _midi_note_global;
     
 public:
     MidiNoteContainer();

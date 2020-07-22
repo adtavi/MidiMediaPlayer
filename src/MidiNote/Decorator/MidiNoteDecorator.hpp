@@ -19,7 +19,6 @@ public:
     ~MidiNoteDecorator();
     
     static void         setFrame(int width, int height);
-
     virtual bool        isOn() const override;
     virtual int         getPitch() const override;
     virtual int         getVelocity() const override;
