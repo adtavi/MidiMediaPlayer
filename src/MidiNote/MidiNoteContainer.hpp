@@ -9,17 +9,22 @@
 
 #include <list>
 #include "ofxMidiMessage.h"
-#include "ofMain.h"
 #include "MidiNoteConcrete.hpp"
 #include "MidiNoteLight.hpp"
 #include "MidiNoteModel.hpp"
+#include "MidiNoteGlobalParticles.hpp"
 #include "MidiNoteSphere.hpp"
 
-class MidiNotes: public std::list<unique_ptr<MidiNote>> {
+class MidiNoteContainer {
+    std::list<unique_ptr<MidiNote>>         _midi_notes;
+    std::list<unique_ptr<MidiNoteGlobal>>   _midi_note_global;
     
 public:
+    MidiNoteContainer();
+    
     void    processMidiNoteOn(const ofxMidiMessage & message);
     void    processMidiNoteOff(const ofxMidiMessage & message);
     void    processMidiControlChange(const ofxMidiMessage & message);
     void    update();
+    void    draw();
 };

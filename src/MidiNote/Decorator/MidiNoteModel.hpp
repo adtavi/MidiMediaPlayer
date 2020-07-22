@@ -1,5 +1,5 @@
 //
-//  MidiNoteLight.hpp
+//  MidiNoteModel.hpp
 //  MidiMediaPlayer
 //
 //  Created by Adriel Taboada on 20/07/2020.
@@ -7,15 +7,18 @@
 
 #pragma once
 
-#include "ofMain.h"
+#include "ofxAssimpModelLoader.h"
 #include "MidiNoteDecorator.hpp"
 
-class MidiNoteLight: public ofLight, public MidiNoteDecorator {
+class MidiNoteModel: public ofxAssimpModelLoader, public MidiNoteDecorator {
 private:
+    float           _key_width;         // Amount of width for each key
     ofColor         _color;
+    float           _angle;
     
+    void            loadModel();
 public:
-    MidiNoteLight(MidiNote * midi_note);
+    MidiNoteModel(MidiNote * midi_note);
         
     virtual bool    toDelete() const override;
     virtual void    setOff() override;

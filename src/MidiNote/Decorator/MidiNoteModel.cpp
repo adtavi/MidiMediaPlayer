@@ -19,7 +19,6 @@ bool    MidiNoteModel::toDelete() const {
 }
 
 void    MidiNoteModel::setOff() {
-    //createEmptyModel();
     _midi_note->setOff();
 }
 
@@ -40,8 +39,9 @@ void    MidiNoteModel::draw() {
 }
 
 void    MidiNoteModel::loadModel() {
+    // @TODO: Remove relative path
     if (ofxAssimpModelLoader::loadModel("../../src/Starmie/pm0121_00.dae"), true) {
-        setPosition((_midi_note->getPitch() - 21) * ofGetWidth() / 87, ofGetHeight() - (_midi_note->getVelocity() + 35) * ofGetHeight()/127, 0);
+        setPosition((_midi_note->getPitch() - MidiNote::_min_pitch) * ofGetWidth() / MidiNote::_num_keys, ofGetHeight() - (_midi_note->getVelocity() + 35) * ofGetHeight()/MidiNote::_num_vel, 0);
         setScale(.05f, .05f, .05f);
         setRotation(0, 180.f, 1.f, 0.f, 0.f);
     }

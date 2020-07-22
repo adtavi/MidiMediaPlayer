@@ -11,12 +11,20 @@ ofColor MidiNoteSphere::_base_color = ofColor(62, ofRandom( 0, 127 ), ofRandom(2
 
 MidiNoteSphere::MidiNoteSphere(MidiNote * midi_note) : MidiNoteDecorator(midi_note) {
     _color = _base_color;
-    _velocity_height = ofGetHeight() / 127;
-    setPosition((_midi_note->getPitch() - 21) * ofGetWidth() / 87, ofGetHeight(), 0);
+    _velocity_height = ofGetHeight() / MidiNote::_num_vel;
+    setPosition((_midi_note->getPitch() - MidiNote::_min_pitch) * ofGetWidth() / MidiNote::_num_keys, ofGetHeight(), 0);
     _min_y = ofGetHeight() - (_midi_note->getVelocity() + 28) * _velocity_height;
     _threshold = ofGetHeight() - 28 * _velocity_height;
     _decrease_y = true;
+    
+    // Radius
     setRadius(_midi_note->getVelocity() / 5 + 5.f);
+    
+    // Material
+    setAmbientColor(_color);
+    setDiffuseColor(_color);
+    setSpecularColor(ofFloatColor::red);
+    setShininess(12);
 }
 
 void MidiNoteSphere::updateGlobal() {
@@ -71,7 +79,8 @@ void MidiNoteSphere::update() {
 }
 
 void  MidiNoteSphere::draw() {
-    ofSetColor(_color);
+    begin();
     ofSpherePrimitive::draw();
+    end();
     _midi_note->draw();
 }

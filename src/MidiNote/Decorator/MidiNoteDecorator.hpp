@@ -7,7 +7,6 @@
 
 #pragma once
 
-#include <stdio.h>
 #include "MidiNote.hpp"
 
 class MidiNoteDecorator: public MidiNote {

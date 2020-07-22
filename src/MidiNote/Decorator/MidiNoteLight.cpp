@@ -8,14 +8,13 @@
 #include "MidiNoteLight.hpp"
 
 MidiNoteLight::MidiNoteLight(MidiNote * midi_note) : MidiNoteDecorator(midi_note) {
-    _color = ofColor(255, 0, 0);
-    setPosition((_midi_note->getPitch() - 21) * ofGetWidth() / 87, ofGetHeight() - (_midi_note->getVelocity() + 35) * ofGetHeight()/127, 0);
+    _color = ofColor::red;
+    setPosition((_midi_note->getPitch() - MidiNote::_min_pitch) * ofGetWidth() / MidiNote::_num_keys, ofGetHeight() - (_midi_note->getVelocity() + 35) * ofGetHeight()/MidiNote::_num_vel, 0);
 
     setDiffuseColor(_color);
     setSpecularColor(_color);
-    setAttenuation(2.f - _midi_note->getVelocity()*2/100, 0.f, 0.f);
-    
-    setSpotlight(3.f, 1.f);
+    setAttenuation(1.f - _midi_note->getVelocity()/500);
+    setSpotlight(15.f, 0);
     lookAt(glm::vec3(getX(), ofGetHeight(), 0));
 
     enable();

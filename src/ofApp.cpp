@@ -76,13 +76,12 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    drawMidiNotes();
+    _midi_notes.draw();
 }
 
 //--------------------------------------------------------------
 void ofApp::exit() {
     // clean up
-    _midi_notes.clear();
     _midi_in.closePort();
     _midi_in.removeListener(this);
 }
@@ -91,10 +90,4 @@ void ofApp::exit() {
 void ofApp::newMidiMessage(ofxMidiMessage& msg) {
     // add the latest message to the message queue
     _midi_messages.push(msg);
-}
-
-void ofApp::drawMidiNotes() {
-    for (auto & midi_note: _midi_notes) {
-        midi_note->draw();
-    }
 }

@@ -6,7 +6,6 @@
 //
 #pragma once
 
-#include <stdio.h>
 #include "MidiNote.hpp"
 
 class MidiNoteConcrete: public MidiNote {
