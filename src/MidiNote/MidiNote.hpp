@@ -20,7 +20,6 @@ public:
     
     static void         setPedal(bool pedal);
     static bool         isPedal();
-    
     virtual int         getPitch() const = 0;
     virtual int         getVelocity() const = 0;
     virtual bool        isOn() const = 0;
@@ -29,4 +28,7 @@ public:
     virtual void        newPress(int velocity) = 0;
     virtual void        update() = 0;
     virtual void        draw() = 0;
+    virtual void        windowResized(int width, int height) = 0;
+    virtual int         getWindowWidth() const = 0;
+    virtual int         getWindowHeight() const = 0;
 };

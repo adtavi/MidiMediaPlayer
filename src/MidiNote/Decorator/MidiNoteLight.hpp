@@ -7,7 +7,6 @@
 
 #pragma once
 
-#include "ofAppRunner.h"
 #include "ofLight.h"
 #include "MidiNoteDecorator.hpp"
 
@@ -22,7 +21,7 @@ private:
     float                   _angle;
     float                   _max_y;
     
-    void                    calcY();
+    float                   calcMaxY(int window_height);
 
 public:
     MidiNoteLight(MidiNote * midi_note);
@@ -32,4 +31,6 @@ public:
     virtual void    newPress(int velocity) override;
     virtual void    update() override;
     virtual void    draw() override;
+    virtual void    windowResized(int width, int height) override;
+
 };

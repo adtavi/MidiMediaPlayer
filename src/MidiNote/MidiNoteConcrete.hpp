@@ -14,10 +14,12 @@ private:
     int                 _pitch;             // Pitch value
     int                 _velocity;          // Velocity values
     bool                _on;                // Whether the key is still being pressed
+    int                 _window_width;      // Window width
+    int                 _window_height;     // Window height
     static bool         _pedal;             // Whether the pedal is being pressed
     
 public:
-    MidiNoteConcrete(int pitch, int velocity);
+    MidiNoteConcrete(int pitch, int velocity, int width, int height);
     
     virtual bool        isOn() const override;
     virtual int         getPitch() const override;
@@ -27,4 +29,7 @@ public:
     virtual void        newPress(int velocity) override;
     virtual void        update() override;
     virtual void        draw() override;
+    virtual void        windowResized(int width, int height) override;
+    virtual int         getWindowWidth() const override;
+    virtual int         getWindowHeight() const override;
 };

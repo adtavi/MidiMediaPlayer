@@ -11,14 +11,18 @@ ofColor MidiNoteSphere::_base_color = ofColor(62, ofRandom( 0, 127 ), ofRandom(2
 
 MidiNoteSphere::MidiNoteSphere(MidiNote * midi_note) : MidiNoteDecorator(midi_note) {
     _color = _base_color;
-    _velocity_height = ofGetHeight() / MidiNote::_num_vel;
-    setPosition((_midi_note->getPitch() - MidiNote::_min_pitch) * ofGetWidth() / MidiNote::_num_keys, ofGetHeight(), 0);
-    _min_y = ofGetHeight() - (_midi_note->getVelocity() + 28) * _velocity_height;
-    _threshold = ofGetHeight() - 28 * _velocity_height;
-    _decrease_y = true;
     
-    // Radius
-    setRadius(_midi_note->getVelocity() / 5 + 5.f);
+    _velocity_height = _midi_note->getWindowHeight() / MidiNote::_num_vel;
+    _key_width = _midi_note->getWindowWidth() / MidiNote::_num_keys;
+    
+    setPosition((_midi_note->getPitch() - MidiNote::_min_pitch) * _key_width, _midi_note->getWindowHeight(), 0);
+    
+    _min_y = _midi_note->getWindowHeight() - (_midi_note->getVelocity() + 28) * _velocity_height;
+    _threshold = _midi_note->getWindowHeight() - 28 * _velocity_height;
+    _decrease_y = true;
+        
+    // Radius relative to window width and velocity
+    setRadius(_key_width/2 + (_key_width/2) * (_midi_note->getVelocity()/100));
     
     // Material
     setAmbientColor(_color);
@@ -34,7 +38,7 @@ void MidiNoteSphere::updateGlobal() {
 }
 
 bool    MidiNoteSphere::toDelete() const {
-    return getY() > ofGetHeight() && _midi_note->toDelete();
+    return getY() > _midi_note->getWindowHeight() && _midi_note->toDelete();
 }
 
 void  MidiNoteSphere::setOff() {
@@ -45,10 +49,10 @@ void  MidiNoteSphere::setOff() {
 void  MidiNoteSphere::newPress(int velocity) {
     _midi_note->newPress(velocity);
     
-    _min_y = ofGetHeight() - _midi_note->getVelocity() * _velocity_height;
+    _min_y = _midi_note->getWindowHeight() - _midi_note->getVelocity() * _velocity_height;
     _decrease_y = getY() > _min_y;
     
-    setRadius(_midi_note->getVelocity() / 10 + 5.f);
+    setRadius(_key_width/2 + (_key_width/2) * (_midi_note->getVelocity()/100));
 }
 
 void MidiNoteSphere::update() {
@@ -63,7 +67,7 @@ void MidiNoteSphere::update() {
     } else {
         if (_midi_note->isPedal() || _midi_note->isOn()) {
             
-            if (getY() > ofGetHeight() - 28 * _velocity_height) { // threshold
+            if (getY() > _midi_note->getWindowHeight() - 28 * _velocity_height) { // threshold
                 amount = 0.5 * _velocity_height;
             } else {
                 // Proportional to the distance to the threshold
@@ -83,4 +87,20 @@ void  MidiNoteSphere::draw() {
     ofSpherePrimitive::draw();
     end();
     _midi_note->draw();
+}
+
+void    MidiNoteSphere::windowResized(int width, int height) {
+    _velocity_height = height / MidiNote::_num_vel;
+    _key_width = width / MidiNote::_num_keys;
+    
+    float y = getY() * height / _midi_note->getWindowHeight();  // Relative y to the new height
+    setPosition((_midi_note->getPitch() - MidiNote::_min_pitch) * _key_width, y, 0);
+    
+    _min_y = height - (_midi_note->getVelocity() + 28) * _velocity_height;
+    _threshold = height - 28 * _velocity_height;
+    
+    // New size
+    setRadius(_key_width/2 + (_key_width/2) * (_midi_note->getVelocity()/100));
+
+    _midi_note->windowResized(width, height);
 }

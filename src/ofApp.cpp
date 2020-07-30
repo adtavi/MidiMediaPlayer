@@ -23,15 +23,16 @@ void ofApp::setup(){
     _midi_in.setVerbose(false);
     
     MidiNote::setPedal(false);
+    _midi_notes = new MidiNoteContainer(ofGetWidth(), ofGetHeight());
     
-    ofFill();
-    
+    // Note timing
     _delta = 0;
     _delta_acc = 0;
     _elapsed_update = 0;
     _elapsed_time = 0;
     
     // Diffuse light
+    ofFill();
     ofSetSmoothLighting(true);
     ofEnableDepthTest();
     ofEnableLighting();
@@ -53,11 +54,11 @@ void ofApp::update(){
             _delta = _delta_acc * 1000;
             _delta_acc = 0;
             
-            _midi_notes.processMidiNoteOn(message);
+            _midi_notes->processMidiNoteOn(message);
         } else if (message.status == MIDI_NOTE_OFF) {
-            _midi_notes.processMidiNoteOff(message);
+            _midi_notes->processMidiNoteOff(message);
         } else if (MIDI_CONTROL_CHANGE) {
-            _midi_notes.processMidiControlChange(message);
+            _midi_notes->processMidiControlChange(message);
         }
         else {
             cout << message.toString() << std::endl;
@@ -66,12 +67,12 @@ void ofApp::update(){
         _midi_messages.pop();
     }
     
-    _midi_notes.update();
+    _midi_notes->update();
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    _midi_notes.draw();
+    _midi_notes->draw();
 }
 
 //--------------------------------------------------------------
@@ -79,10 +80,15 @@ void ofApp::exit() {
     // clean up
     _midi_in.closePort();
     _midi_in.removeListener(this);
+    delete _midi_notes;
 }
 
 //--------------------------------------------------------------
 void ofApp::newMidiMessage(ofxMidiMessage& msg) {
     // add the latest message to the message queue
     _midi_messages.push(msg);
+}
+
+void ofApp::windowResized(int width, int height) {
+    _midi_notes->windowResized(width, height);
 }

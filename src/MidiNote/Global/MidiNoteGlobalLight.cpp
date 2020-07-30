@@ -7,11 +7,11 @@
 
 #include "MidiNoteGlobalLight.hpp"
 
-MidiNoteGlobalLight::MidiNoteGlobalLight() {
+MidiNoteGlobalLight::MidiNoteGlobalLight(int width, int height) : MidiNoteGlobal(width, height) {
     _num_keys = 0;
     setAmbientColor(ofColor(0, 31, 31));
     setDiffuseColor(ofColor(0, 31, 31));
-    setPosition(ofGetWidth()/2, 0, 0);
+    setPosition(_window_width/2, 0, 0);
     setPointLight();
     
     _constant_attenuation_rate = (_max_constant_attenuation - _min_constant_attenuation) / 20;
@@ -58,4 +58,11 @@ void    MidiNoteGlobalLight::draw() {
 
 bool    MidiNoteGlobalLight::toDelete() const {
     return false;
+}
+
+void    MidiNoteGlobalLight::windowResized(int width, int height) {
+    _window_width = width;
+    _window_height = height;
+
+    setPosition(_window_width/2, 0, 0);
 }

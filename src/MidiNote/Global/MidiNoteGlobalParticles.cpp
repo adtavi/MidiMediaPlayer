@@ -6,9 +6,9 @@
 //
 #include "MidiNoteGlobalParticles.hpp"
 
-MidiNoteGlobalParticles::MidiNoteGlobalParticles() {
+MidiNoteGlobalParticles::MidiNoteGlobalParticles(int width, int height) : MidiNoteGlobal(width, height) {
     resize(_num_particles);
-    std::for_each(begin(), end(), std::mem_fn(&MidiNoteParticle::init));
+    std::for_each(begin(), end(), std::bind(std::mem_fn(&MidiNoteParticle::init), std::placeholders::_1, width, height));
 }
 
 void    MidiNoteGlobalParticles::midiNoteOn() {
@@ -33,4 +33,8 @@ void    MidiNoteGlobalParticles::draw() {
 
 bool    MidiNoteGlobalParticles::toDelete() const {
     return false;
+}
+
+void    MidiNoteGlobalParticles::windowResized(int width, int height) {
+    std::for_each(begin(), end(), std::bind(std::mem_fn(&MidiNoteParticle::windowResized), std::placeholders::_1, width, height));
 }

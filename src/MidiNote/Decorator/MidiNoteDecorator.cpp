@@ -25,4 +25,10 @@ int     MidiNoteDecorator::getVelocity() const {
     return _midi_note->getVelocity();
 }
 
+int     MidiNoteDecorator::getWindowWidth() const {
+    return _midi_note->getWindowWidth();
+}
 
+int     MidiNoteDecorator::getWindowHeight() const {
+    return _midi_note->getWindowHeight();
+}

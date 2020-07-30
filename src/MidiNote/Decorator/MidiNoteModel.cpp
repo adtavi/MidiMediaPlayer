@@ -12,11 +12,14 @@ MidiNoteModel::MidiNoteModel(MidiNote * midi_note) : MidiNoteDecorator(midi_note
     _angle  = 0.f;
     
     // @TODO: Remove relative path
-    if (ofxAssimpModelLoader::loadModel("../../Starmie/pm0121_00.dae")) {
-        setScale(.1f, .1f, .1f);
-        setRotation(0, 180.f, 1.f, 0.f, 0.f);
-        calcY();
-        setPosition((_midi_note->getPitch() - MidiNote::_min_pitch) * ofGetWidth() / MidiNote::_num_keys, _max_y, 0);
+    if (ofxAssimpModelLoader::loadModel("../../data/Starmie/pm0121_00.dae")) {
+        //setScale(.1f, .1f, .1f);
+        //setRotation(0, 180.f, 1.f, 0.f, 0.f);
+        _max_y = calcMaxY(_midi_note->getWindowHeight());
+        setPosition((_midi_note->getPitch() - MidiNote::_min_pitch) * _midi_note->getWindowWidth() / MidiNote::_num_keys, _max_y, 0);
+
+        float scale = _window_to_scale_ratio * _midi_note->getWindowHeight() * _midi_note->getWindowWidth();
+        setScale(scale, scale, scale);
     }
 }
 
@@ -29,7 +32,7 @@ void    MidiNoteModel::setOff() {
 }
 
 void    MidiNoteModel::newPress(int velocity) {
-    calcY();
+    _max_y = calcMaxY(_midi_note->getWindowHeight());
     _midi_note->newPress(velocity);
 }
 
@@ -52,6 +55,18 @@ void    MidiNoteModel::draw() {
     _midi_note->draw();
 }
 
-void    MidiNoteModel::calcY() {
-    _max_y = ofGetHeight() - (_midi_note->getVelocity() + 35) * ofGetHeight()/MidiNote::_num_vel;
+float    MidiNoteModel::calcMaxY(int window_height) {
+    return window_height - (_midi_note->getVelocity() + 35) * (window_height/MidiNote::_num_vel);
+}
+
+void    MidiNoteModel::windowResized(int width, int height) {
+    std::cout << typeid(this).name() << std::endl;
+    _max_y = calcMaxY(height);
+    float y = getPosition().y * height / _midi_note->getWindowHeight();  // Relative y to the new height
+    setPosition((_midi_note->getPitch() - MidiNote::_min_pitch) * width / MidiNote::_num_keys, y, 0);
+    
+    float scale = _window_to_scale_ratio * _midi_note->getWindowHeight() * _midi_note->getWindowWidth();
+    setScale(scale, scale, scale);
+    
+    _midi_note->windowResized(width, height);
 }

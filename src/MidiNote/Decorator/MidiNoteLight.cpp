@@ -10,13 +10,16 @@
 MidiNoteLight::MidiNoteLight(MidiNote * midi_note) : MidiNoteDecorator(midi_note) {
     _color = ofColor::red;
 
-    calcY();
-    setPosition((_midi_note->getPitch() - MidiNote::_min_pitch) * ofGetWidth() / MidiNote::_num_keys, _max_y, 0);
+    // Position
+    _max_y = calcMaxY(_midi_note->getWindowHeight());
+    setPosition((_midi_note->getPitch() - MidiNote::_min_pitch) * _midi_note->getWindowWidth() / MidiNote::_num_keys, _max_y, 0);
+    
+    // Color
     setDiffuseColor(_color);
     setSpecularColor(_color);
     setAttenuation(1.f - _midi_note->getVelocity()/500);
     setSpotlight(_max_angle, 0);
-    lookAt(glm::vec3(getX(), ofGetHeight(), 0));
+    lookAt(glm::vec3(getX(), midi_note->getWindowHeight(), 0));
 
     enable();
 }
@@ -31,7 +34,7 @@ void    MidiNoteLight::setOff() {
 }
 
 void    MidiNoteLight::newPress(int velocity) {
-    calcY();
+    _max_y = calcMaxY(_midi_note->getWindowHeight());
     setSpotlight(_max_angle, 0);
     enable();
     _midi_note->newPress(velocity);
@@ -58,6 +61,15 @@ void    MidiNoteLight::draw() {
     _midi_note->draw();
 }
 
-void    MidiNoteLight::calcY() {
-    _max_y = ofGetHeight() - (_midi_note->getVelocity() + 35) * ofGetHeight()/MidiNote::_num_vel;
+float    MidiNoteLight::calcMaxY(int window_height) {
+    return window_height - (_midi_note->getVelocity() + 35) * (window_height/MidiNote::_num_vel);
+}
+
+void    MidiNoteLight::windowResized(int width, int height) {
+    std::cout << typeid(this).name() << std::endl;
+    _max_y = calcMaxY(height);
+    float y = getY() * height / _midi_note->getWindowHeight();  // Relative y to the new height
+    setPosition((_midi_note->getPitch() - MidiNote::_min_pitch) * width / MidiNote::_num_keys, y, 0);
+    
+    _midi_note->windowResized(width, height);
 }
