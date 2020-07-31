@@ -2,13 +2,13 @@
 
 #include "ofMain.h"
 #include "ofxMidi.h"
-#include "MidiNoteContainer.hpp"
+#include "MidiContainer.hpp"
 
 class ofApp : public ofBaseApp, public ofxMidiListener {
     
-    MidiNoteContainer*          _midi_notes;
+    MidiContainer*          _midi_notes;
     ofxMidiIn                   _midi_in;
-    std::queue<ofxMidiMessage>  _midi_messages;
+    queue<ofxMidiMessage>  _midi_messages;
     
     // Deltas and time for onset detection
     uint64_t                    _delta;

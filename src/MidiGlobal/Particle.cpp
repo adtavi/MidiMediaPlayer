@@ -5,9 +5,11 @@
 //  Created by Adriel Taboada on 21/07/2020.
 //
 
-#include "MidiNoteParticle.hpp"
+#include "Particle.hpp"
 
-MidiNoteParticle::MidiNoteParticle() {
+using namespace MidiGlobal;
+
+Particle::Particle() {
     // Material
     setAmbientColor(ofFloatColor::black);
     setDiffuseColor(ofFloatColor::gold);
@@ -15,7 +17,7 @@ MidiNoteParticle::MidiNoteParticle() {
     setShininess(0);
 }
 
-void    MidiNoteParticle::init(int width, int height) {
+void    Particle::init(int width, int height) {
     _window_width = width;
     _window_height = height;
     
@@ -36,7 +38,7 @@ void    MidiNoteParticle::init(int width, int height) {
     setHeight(size);
 }
 
-void    MidiNoteParticle::update() {
+void    Particle::update() {
     // Update position
     setPosition(getPosition() + _velocity);
     
@@ -55,13 +57,13 @@ void    MidiNoteParticle::update() {
     }
 }
 
-void    MidiNoteParticle::draw() {
+void    Particle::draw() {
     ofMaterial::begin();
     ofPlanePrimitive::draw();
     ofMaterial::end();
 }
 
-void    MidiNoteParticle::windowResized(int width, int height) {
+void    Particle::windowResized(int width, int height) {
     _window_width = width;
     _window_height = height;
     

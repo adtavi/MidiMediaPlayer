@@ -6,14 +6,18 @@
 //
 #pragma once
 
-class MidiNoteGlobal {
+#include <iostream>
+
+using namespace std;
+
+class Base {
 protected:
     int                 _window_width;
     int                 _window_height;
     
 public:
-    MidiNoteGlobal(int width, int height);
-    virtual             ~MidiNoteGlobal() = default;
+    Base(int width, int height);
+    virtual             ~Base() = default;
     
     virtual void        midiNoteOn() = 0;
     virtual void        midiNoteOff() = 0;
@@ -22,5 +26,4 @@ public:
     virtual void        draw() = 0;
     virtual bool        toDelete() const = 0;
     virtual void        windowResized(int width, int height) = 0;
-
 };

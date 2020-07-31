@@ -23,7 +23,7 @@ void ofApp::setup(){
     _midi_in.setVerbose(false);
     
     MidiNote::setPedal(false);
-    _midi_notes = new MidiNoteContainer(ofGetWidth(), ofGetHeight());
+    _midi_notes = new MidiContainer(ofGetWidth(), ofGetHeight());
     
     // Note timing
     _delta = 0;
@@ -43,7 +43,7 @@ void ofApp::update(){
     _elapsed_update = (ofGetElapsedTimeMicros() - _elapsed_time);
     _elapsed_time = ofGetElapsedTimeMicros();
     
-    MidiNoteSphere::updateGlobal();
+    MidiNote::DecoratorSphere::updateGlobal();
     
     while (!_midi_messages.empty()) {
         auto message = _midi_messages.front();

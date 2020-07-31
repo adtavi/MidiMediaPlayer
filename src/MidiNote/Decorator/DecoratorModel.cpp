@@ -5,9 +5,11 @@
 //  Created by Adriel Taboada on 20/07/2020.
 //
 
-#include "MidiNoteModel.hpp"
+#include "DecoratorModel.hpp"
 
-MidiNoteModel::MidiNoteModel(MidiNote * midi_note) : MidiNoteDecorator(midi_note) {
+using namespace MidiNote;
+
+DecoratorModel::DecoratorModel(Base* midi_note) : Decorator(midi_note) {
     _color = ofColor(255, 0, 0);
     _angle  = 0.f;
     
@@ -23,20 +25,20 @@ MidiNoteModel::MidiNoteModel(MidiNote * midi_note) : MidiNoteDecorator(midi_note
     }
 }
 
-bool    MidiNoteModel::toDelete() const {
+bool    DecoratorModel::toDelete() const {
     return _midi_note->toDelete();
 }
 
-void    MidiNoteModel::setOff() {
+void    DecoratorModel::setOff() {
     _midi_note->setOff();
 }
 
-void    MidiNoteModel::newPress(int velocity) {
+void    DecoratorModel::newPress(int velocity) {
     _max_y = calcMaxY(_midi_note->getWindowHeight());
     _midi_note->newPress(velocity);
 }
 
-void    MidiNoteModel::update() {
+void    DecoratorModel::update() {
     ofPoint position = getPosition();
     
     if (position.y > _max_y + _boom_rate) {
@@ -50,17 +52,16 @@ void    MidiNoteModel::update() {
     _midi_note->update();
 }
 
-void    MidiNoteModel::draw() {
+void    DecoratorModel::draw() {
     drawFaces();
     _midi_note->draw();
 }
 
-float    MidiNoteModel::calcMaxY(int window_height) {
+float   DecoratorModel::calcMaxY(int window_height) {
     return window_height - (_midi_note->getVelocity() + 35) * (window_height/MidiNote::_num_vel);
 }
 
-void    MidiNoteModel::windowResized(int width, int height) {
-    std::cout << typeid(this).name() << std::endl;
+void    DecoratorModel::windowResized(int width, int height) {
     _max_y = calcMaxY(height);
     float y = getPosition().y * height / _midi_note->getWindowHeight();  // Relative y to the new height
     setPosition((_midi_note->getPitch() - MidiNote::_min_pitch) * width / MidiNote::_num_keys, y, 0);

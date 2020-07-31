@@ -6,14 +6,16 @@
 //
 #pragma once
 
-#include "MidiNoteGlobal.hpp"
-#include "MidiNoteParticle.hpp"
+#include "Base.hpp"
+#include "Particle.hpp"
 
-class MidiNoteGlobalParticles: private std::vector<MidiNoteParticle>, public MidiNoteGlobal {
+namespace MidiGlobal {
+
+class Particles: private vector<Particle>, public Base {
     static constexpr int    _num_particles = 5000;
     
 public:
-    MidiNoteGlobalParticles(int width, int height);
+    Particles(int width, int height);
     
     virtual void        midiNoteOn() override;
     virtual void        midiNoteOff() override;
@@ -23,3 +25,5 @@ public:
     virtual bool        toDelete() const override;
     virtual void        windowResized(int width, int height) override;
 };
+ 
+}

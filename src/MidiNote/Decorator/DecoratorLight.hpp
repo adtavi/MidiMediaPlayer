@@ -8,9 +8,11 @@
 #pragma once
 
 #include "ofLight.h"
-#include "MidiNoteDecorator.hpp"
+#include "Decorator.hpp"
 
-class MidiNoteLight: public ofLight, public MidiNoteDecorator {
+namespace MidiNote {
+
+class DecoratorLight: public ofLight, public Decorator {
 private:
     static constexpr float  _boom_rate = 5.0f;
     static constexpr float  _max_angle = 20.f;
@@ -24,7 +26,7 @@ private:
     float                   calcMaxY(int window_height);
 
 public:
-    MidiNoteLight(MidiNote * midi_note);
+    DecoratorLight(Base* midi_note);
         
     virtual bool    toDelete() const override;
     virtual void    setOff() override;
@@ -32,5 +34,6 @@ public:
     virtual void    update() override;
     virtual void    draw() override;
     virtual void    windowResized(int width, int height) override;
-
 };
+
+}

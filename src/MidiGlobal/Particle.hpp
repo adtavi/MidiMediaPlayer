@@ -10,7 +10,9 @@
 #include "of3dPrimitives.h"
 #include "ofMaterial.h"
 
-class MidiNoteParticle: public ofPlanePrimitive, ofMaterial {
+namespace MidiGlobal {
+
+class Particle: public ofPlanePrimitive, ofMaterial {
 private:
     static constexpr float  _min_z = -100;
     static constexpr float  _max_z = 100;
@@ -21,10 +23,12 @@ private:
     int                     _window_height;
     
 public:
-    MidiNoteParticle();
+    Particle();
     
     void                    init(int width, int height);
     void                    update();
     void                    draw();
     void                    windowResized(int width, int height);
 };
+
+}

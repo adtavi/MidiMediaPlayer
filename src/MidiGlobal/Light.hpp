@@ -7,9 +7,11 @@
 #pragma once
 
 #include "ofLight.h"
-#include "MidiNoteGlobal.hpp"
+#include "Base.hpp"
 
-class MidiNoteGlobalLight: private ofLight, public MidiNoteGlobal {
+namespace MidiGlobal {
+
+class Light: private ofLight, public Base {
     
     unsigned int            _num_keys;
     
@@ -26,7 +28,7 @@ class MidiNoteGlobalLight: private ofLight, public MidiNoteGlobal {
     
     
 public:
-    MidiNoteGlobalLight(int width, int height);
+    Light(int width, int height);
     
     virtual void        midiNoteOn() override;
     virtual void        midiNoteOff() override;
@@ -36,3 +38,5 @@ public:
     virtual bool        toDelete() const override;
     virtual void        windowResized(int width, int height) override;
 };
+
+}

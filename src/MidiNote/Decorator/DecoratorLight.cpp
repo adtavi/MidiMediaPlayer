@@ -5,11 +5,13 @@
 //  Created by Adriel Taboada on 20/07/2020.
 //
 
-#include "MidiNoteLight.hpp"
+#include "DecoratorLight.hpp"
 
-MidiNoteLight::MidiNoteLight(MidiNote * midi_note) : MidiNoteDecorator(midi_note) {
+using namespace MidiNote;
+
+DecoratorLight::DecoratorLight(Base* midi_note) : Decorator(midi_note) {
     _color = ofColor::red;
-
+    
     // Position
     _max_y = calcMaxY(_midi_note->getWindowHeight());
     setPosition((_midi_note->getPitch() - MidiNote::_min_pitch) * _midi_note->getWindowWidth() / MidiNote::_num_keys, _max_y, 0);
@@ -20,27 +22,27 @@ MidiNoteLight::MidiNoteLight(MidiNote * midi_note) : MidiNoteDecorator(midi_note
     setAttenuation(1.f - _midi_note->getVelocity()/500);
     setSpotlight(_max_angle, 0);
     lookAt(glm::vec3(getX(), midi_note->getWindowHeight(), 0));
-
+    
     enable();
 }
 
-bool    MidiNoteLight::toDelete() const {
+bool    DecoratorLight::toDelete() const {
     return _midi_note->toDelete();
 }
 
-void    MidiNoteLight::setOff() {
+void    DecoratorLight::setOff() {
     disable();
     _midi_note->setOff();
 }
 
-void    MidiNoteLight::newPress(int velocity) {
+void    DecoratorLight::newPress(int velocity) {
     _max_y = calcMaxY(_midi_note->getWindowHeight());
     setSpotlight(_max_angle, 0);
     enable();
     _midi_note->newPress(velocity);
 }
 
-void    MidiNoteLight::update() {
+void    DecoratorLight::update() {
     ofPoint position = getPosition();
     
     if (getY() > _max_y + _boom_rate) {
@@ -53,20 +55,19 @@ void    MidiNoteLight::update() {
     if (getSpotlightCutOff() > _min_angle) {
         setSpotlightCutOff(spotlight_cutoff-_angle_rate);
     }
-
+    
     _midi_note->update();
 }
 
-void    MidiNoteLight::draw() {
+void    DecoratorLight::draw() {
     _midi_note->draw();
 }
 
-float    MidiNoteLight::calcMaxY(int window_height) {
+float   DecoratorLight::calcMaxY(int window_height) {
     return window_height - (_midi_note->getVelocity() + 35) * (window_height/MidiNote::_num_vel);
 }
 
-void    MidiNoteLight::windowResized(int width, int height) {
-    std::cout << typeid(this).name() << std::endl;
+void    DecoratorLight::windowResized(int width, int height) {
     _max_y = calcMaxY(height);
     float y = getY() * height / _midi_note->getWindowHeight();  // Relative y to the new height
     setPosition((_midi_note->getPitch() - MidiNote::_min_pitch) * width / MidiNote::_num_keys, y, 0);

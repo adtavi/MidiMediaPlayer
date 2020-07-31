@@ -5,9 +5,11 @@
 //  Created by Adriel Taboada on 22/07/2020.
 //
 
-#include "MidiNoteGlobalLight.hpp"
+#include "Light.hpp"
 
-MidiNoteGlobalLight::MidiNoteGlobalLight(int width, int height) : MidiNoteGlobal(width, height) {
+using namespace MidiGlobal;
+
+Light::Light(int width, int height) : Base(width, height) {
     _num_keys = 0;
     setAmbientColor(ofColor(0, 31, 31));
     setDiffuseColor(ofColor(0, 31, 31));
@@ -18,7 +20,7 @@ MidiNoteGlobalLight::MidiNoteGlobalLight(int width, int height) : MidiNoteGlobal
     _linear_attenuation_rate = (_max_linear_attenuation - _min_linear_attenuation) / 20;
 }
 
-void    MidiNoteGlobalLight::midiNoteOn() {
+void    Light::midiNoteOn() {
     _constant_attenuation = _min_constant_attenuation;
     _linear_attenuation = _min_linear_attenuation;
     setAttenuation(_constant_attenuation, _linear_attenuation);
@@ -27,7 +29,7 @@ void    MidiNoteGlobalLight::midiNoteOn() {
     enable();
 }
 
-void    MidiNoteGlobalLight::midiNoteOff() {
+void    Light::midiNoteOff() {
     _num_keys--;
     
     // If there are no keys pressed, disable light
@@ -36,11 +38,11 @@ void    MidiNoteGlobalLight::midiNoteOff() {
     }
 }
 
-void    MidiNoteGlobalLight::midiControlChange() {
+void    Light::midiControlChange() {
     return;
 }
 
-void    MidiNoteGlobalLight::update() {
+void    Light::update() {
     if (_constant_attenuation < _max_constant_attenuation) {
         _constant_attenuation += _constant_attenuation_rate;
     }
@@ -52,15 +54,15 @@ void    MidiNoteGlobalLight::update() {
     setAttenuation(_constant_attenuation, _linear_attenuation);
 }
 
-void    MidiNoteGlobalLight::draw() {
+void    Light::draw() {
     return;
 }
 
-bool    MidiNoteGlobalLight::toDelete() const {
+bool    Light::toDelete() const {
     return false;
 }
 
-void    MidiNoteGlobalLight::windowResized(int width, int height) {
+void    Light::windowResized(int width, int height) {
     _window_width = width;
     _window_height = height;
 

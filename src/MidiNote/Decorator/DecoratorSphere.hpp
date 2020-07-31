@@ -9,11 +9,13 @@
 
 #include "of3dPrimitives.h"
 #include "ofMaterial.h"
-#include "MidiNoteDecorator.hpp"
+#include "Decorator.hpp"
 
-class MidiNoteSphere: public ofSpherePrimitive, public MidiNoteDecorator, public ofMaterial {
+namespace MidiNote {
+
+class DecoratorSphere: public ofSpherePrimitive, public Decorator, public ofMaterial {
 private:
-    float           _min_y;             // Maximum position y
+    float           _min_y;             // Minimum y position
     bool            _decrease_y;        // Ball moving upwards
     float           _velocity_height;   // Amount of height for each velocity value
     float           _threshold;         // Threshold for slowing down sphere falling
@@ -22,7 +24,7 @@ private:
     static ofColor  _base_color;        // Base random changing color
     
 public:
-    MidiNoteSphere(MidiNote * midi_note);
+    DecoratorSphere(Base* midi_note);
     
     static void     updateGlobal();
     
@@ -32,6 +34,6 @@ public:
     virtual void    update() override;
     virtual void    draw() override;
     virtual void    windowResized(int width, int height) override;
-
 };
 
+}

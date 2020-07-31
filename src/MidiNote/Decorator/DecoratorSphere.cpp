@@ -5,11 +5,13 @@
 //  Created by Adriel Taboada on 19/07/2020.
 //
 
-#include "MidiNoteSphere.hpp"
+#include "DecoratorSphere.hpp"
 
-ofColor MidiNoteSphere::_base_color = ofColor(62, ofRandom( 0, 127 ), ofRandom(200,255));
+using namespace MidiNote;
 
-MidiNoteSphere::MidiNoteSphere(MidiNote * midi_note) : MidiNoteDecorator(midi_note) {
+ofColor DecoratorSphere::_base_color = ofColor(62, ofRandom( 0, 127 ), ofRandom(200,255));
+
+DecoratorSphere::DecoratorSphere(Base* midi_note) : Decorator(midi_note) {
     _color = _base_color;
     
     _velocity_height = _midi_note->getWindowHeight() / MidiNote::_num_vel;
@@ -31,22 +33,22 @@ MidiNoteSphere::MidiNoteSphere(MidiNote * midi_note) : MidiNoteDecorator(midi_no
     setShininess(12);
 }
 
-void MidiNoteSphere::updateGlobal() {
+void DecoratorSphere::updateGlobal() {
     //_base_color.r = (_base_color.r + 1) % 62;
     _base_color.g = (_base_color.g + 1) % 127;
     _base_color.b = 200 + (_base_color.b - 199) % 55;
 }
 
-bool    MidiNoteSphere::toDelete() const {
+bool    DecoratorSphere::toDelete() const {
     return getY() > _midi_note->getWindowHeight() && _midi_note->toDelete();
 }
 
-void  MidiNoteSphere::setOff() {
+void  DecoratorSphere::setOff() {
     _midi_note->setOff();
     _decrease_y = false;
 }
 
-void  MidiNoteSphere::newPress(int velocity) {
+void  DecoratorSphere::newPress(int velocity) {
     _midi_note->newPress(velocity);
     
     _min_y = _midi_note->getWindowHeight() - _midi_note->getVelocity() * _velocity_height;
@@ -55,7 +57,7 @@ void  MidiNoteSphere::newPress(int velocity) {
     setRadius(_key_width/2 + (_key_width/2) * (_midi_note->getVelocity()/100));
 }
 
-void MidiNoteSphere::update() {
+void DecoratorSphere::update() {
     _midi_note->update();
     
     // Moving...
@@ -65,7 +67,7 @@ void MidiNoteSphere::update() {
         amount = -10 * _velocity_height;
         _decrease_y = getY() > _min_y;
     } else {
-        if (_midi_note->isPedal() || _midi_note->isOn()) {
+        if (MidiNote::isPedal() || _midi_note->isOn()) {
             
             if (getY() > _midi_note->getWindowHeight() - 28 * _velocity_height) { // threshold
                 amount = 0.5 * _velocity_height;
@@ -82,14 +84,14 @@ void MidiNoteSphere::update() {
     boom(amount);
 }
 
-void  MidiNoteSphere::draw() {
+void  DecoratorSphere::draw() {
     begin();
     ofSpherePrimitive::draw();
     end();
     _midi_note->draw();
 }
 
-void    MidiNoteSphere::windowResized(int width, int height) {
+void    DecoratorSphere::windowResized(int width, int height) {
     _velocity_height = height / MidiNote::_num_vel;
     _key_width = width / MidiNote::_num_keys;
     

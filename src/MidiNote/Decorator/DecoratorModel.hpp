@@ -8,9 +8,11 @@
 #pragma once
 
 #include "ofxAssimpModelLoader.h"
-#include "MidiNoteDecorator.hpp"
+#include "Decorator.hpp"
 
-class MidiNoteModel: public ofxAssimpModelLoader, public MidiNoteDecorator {
+namespace MidiNote {
+
+class DecoratorModel: public ofxAssimpModelLoader, public Decorator {
 private:
     static constexpr float  _boom_rate = 5.0f;
     static constexpr float  _angle_rate = 5.0f;
@@ -24,7 +26,7 @@ private:
     float                   calcMaxY(int window_height);
     
 public:
-    MidiNoteModel(MidiNote * midi_note);
+    DecoratorModel(Base* midi_note);
     
     virtual bool    toDelete() const override;
     virtual void    setOff() override;
@@ -34,3 +36,5 @@ public:
     virtual void    windowResized(int width, int height) override;
 
 };
+
+}
