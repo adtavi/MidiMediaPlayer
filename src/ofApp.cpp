@@ -22,7 +22,6 @@ void ofApp::setup(){
     // print received messages to the console
     _midi_in.setVerbose(false);
     
-    MidiNote::setPedal(false);
     _midi_notes = new MidiContainer(ofGetWidth(), ofGetHeight());
     
     // Note timing

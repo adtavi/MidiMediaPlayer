@@ -5,13 +5,12 @@
 //  Created by Adriel Taboada on 19/07/2020.
 //
 
-#include "MidiNoteContainer.hpp"
+#include "MidiContainer.hpp"
 
 MidiContainer::MidiContainer(int window_width, int window_height) {
-    _window_width = window_width;
-    _window_height = window_height;
-    _midi_note_global.push_back(move(make_unique<MidiGlobal::Particles>(_window_width, _window_height)));
-    _midi_note_global.push_back(move(make_unique<MidiGlobal::Light>(_window_width, _window_height)));
+    MidiSettings::setWindow(window_width, window_height);
+    _midi_note_global.push_back(move(make_unique<MidiGlobal::Particles>()));
+    _midi_note_global.push_back(move(make_unique<MidiGlobal::Light>()));
 }
 
 void MidiContainer::processMidiNoteOn(const ofxMidiMessage & message) {
@@ -24,7 +23,7 @@ void MidiContainer::processMidiNoteOn(const ofxMidiMessage & message) {
         (*it).get()->newPress(message.velocity);           // Key pressed again
     } else {
         // Decorating note
-        MidiNote::MidiNote * midi_note_concrete = new MidiNote::MidiNote(message.pitch, message.velocity, _window_width, _window_height);
+        MidiNote::MidiNote * midi_note_concrete = new MidiNote::MidiNote(message.pitch, message.velocity);
         MidiNote::DecoratorSphere * midi_note_sphere = new MidiNote::DecoratorSphere(midi_note_concrete);
         MidiNote::DecoratorLight * midi_note_light = new MidiNote::DecoratorLight(midi_note_sphere);
         _midi_notes.push_back(std::move(std::make_unique<MidiNote::DecoratorModel>(midi_note_light)));
@@ -51,7 +50,7 @@ void MidiContainer::processMidiNoteOff(const ofxMidiMessage & message) {
 
 void MidiContainer::processMidiControlChange(const ofxMidiMessage & message) {
     if (message.control == 64) {
-        MidiNote::setPedal(message.value == 127);
+        MidiSettings::setPedal(message.value == 127);
     }
     
     for_each(_midi_note_global.begin(), _midi_note_global.end(), mem_fn(&MidiGlobal::Base::midiControlChange));
@@ -72,9 +71,8 @@ void MidiContainer::draw() {
     for_each(_midi_note_global.begin(), _midi_note_global.end(), mem_fn(&MidiGlobal::Base::draw));
 }
 
-void MidiContainer::windowResized(int width, int height) {
-    _window_width = width;
-    _window_height = height;
-    for_each(_midi_notes.begin(), _midi_notes.end(), bind(mem_fn(&MidiNote::Base::windowResized), placeholders::_1, width, height));
-    for_each(_midi_note_global.begin(), _midi_note_global.end(), bind(mem_fn(&MidiGlobal::Base::windowResized), placeholders::_1, width, height));
+void MidiContainer::windowResized(int window_width, int window_height) {
+    MidiSettings::setWindow(window_width, window_height);
+    for_each(_midi_notes.begin(), _midi_notes.end(), mem_fn(&MidiNote::Base::windowResized));
+    for_each(_midi_note_global.begin(), _midi_note_global.end(), mem_fn(&MidiGlobal::Base::windowResized));
 }

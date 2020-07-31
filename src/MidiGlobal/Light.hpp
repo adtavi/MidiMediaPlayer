@@ -25,10 +25,8 @@ class Light: private ofLight, public Base {
     static constexpr float  _max_linear_attenuation = 0.01f;
     float                   _linear_attenuation_rate;
     
-    
-    
 public:
-    Light(int width, int height);
+    Light();
     
     virtual void        midiNoteOn() override;
     virtual void        midiNoteOff() override;
@@ -36,7 +34,7 @@ public:
     virtual void        update() override;
     virtual void        draw() override;
     virtual bool        toDelete() const override;
-    virtual void        windowResized(int width, int height) override;
+    virtual void        windowResized() override;
 };
 
 }

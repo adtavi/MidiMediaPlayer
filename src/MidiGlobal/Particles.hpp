@@ -15,7 +15,7 @@ class Particles: private vector<Particle>, public Base {
     static constexpr int    _num_particles = 5000;
     
 public:
-    Particles(int width, int height);
+    Particles();
     
     virtual void        midiNoteOn() override;
     virtual void        midiNoteOff() override;
@@ -23,7 +23,7 @@ public:
     virtual void        update() override;
     virtual void        draw() override;
     virtual bool        toDelete() const override;
-    virtual void        windowResized(int width, int height) override;
+    virtual void        windowResized() override;
 };
  
 }

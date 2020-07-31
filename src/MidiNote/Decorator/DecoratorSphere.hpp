@@ -17,12 +17,9 @@ class DecoratorSphere: public ofSpherePrimitive, public Decorator, public ofMate
 private:
     float           _min_y;             // Minimum y position
     bool            _decrease_y;        // Ball moving upwards
-    float           _velocity_height;   // Amount of height for each velocity value
-    float           _threshold;         // Threshold for slowing down sphere falling
-    float           _key_width;         // Window width for each key
     ofColor         _color;             // Ball color
     static ofColor  _base_color;        // Base random changing color
-    
+
 public:
     DecoratorSphere(Base* midi_note);
     
@@ -33,7 +30,7 @@ public:
     virtual void    newPress(int velocity) override;
     virtual void    update() override;
     virtual void    draw() override;
-    virtual void    windowResized(int width, int height) override;
+    virtual void    windowResized() override;
 };
 
 }

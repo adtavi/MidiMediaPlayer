@@ -9,6 +9,7 @@
 
 #include "of3dPrimitives.h"
 #include "ofMaterial.h"
+#include "MidiSettings.hpp"
 
 namespace MidiGlobal {
 
@@ -19,16 +20,14 @@ private:
     static constexpr float  _window_to_size_ratio = 0.0000026;
     
     glm::vec3               _velocity;
-    int                     _window_width;
-    int                     _window_height;
     
 public:
     Particle();
     
-    void                    init(int width, int height);
+    void                    init();
     void                    update();
     void                    draw();
-    void                    windowResized(int width, int height);
+    void                    windowResized();
 };
 
 }

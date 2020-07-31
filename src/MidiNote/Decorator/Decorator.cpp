@@ -26,11 +26,3 @@ int     Decorator::getPitch() const {
 int     Decorator::getVelocity() const {
     return _midi_note->getVelocity();
 }
-
-int     Decorator::getWindowWidth() const {
-    return _midi_note->getWindowWidth();
-}
-
-int     Decorator::getWindowHeight() const {
-    return _midi_note->getWindowHeight();
-}

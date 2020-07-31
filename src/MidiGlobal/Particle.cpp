@@ -17,23 +17,20 @@ Particle::Particle() {
     setShininess(0);
 }
 
-void    Particle::init(int width, int height) {
-    _window_width = width;
-    _window_height = height;
-    
+void    Particle::init() {
     // Random velocity
     _velocity.x = ofRandom(-0.2, 0.2);
     _velocity.y = ofRandom(0, 0.6);
     _velocity.z = 0;
     
     // Initial random pos
-    setPosition(rand() % _window_width, rand() % _window_height, 0);
+    setPosition(rand() % MidiSettings::getWindowWidth(), rand() % MidiSettings::getWindowHeight(), 0);
     
     // Random orientation
     setOrientation(glm::vec3(rand() % 360, rand() % 360, rand() % 360));
     
     // Size
-    const float size = _window_width * _window_height * _window_to_size_ratio;
+    const float size = MidiSettings::getWindowWidth() * MidiSettings::getWindowHeight() * _window_to_size_ratio;
     setWidth(size);
     setHeight(size);
 }
@@ -43,13 +40,13 @@ void    Particle::update() {
     setPosition(getPosition() + _velocity);
     
     // If it went out of screen, move it upwards
-    if (getY() + _velocity.y > _window_height) {
+    if (getY() + _velocity.y > MidiSettings::getWindowHeight()) {
         setPosition(getX(), 0, getZ());
     }
     
     // Check if it goes out of bound for width
-    if (getX() > _window_width) {
-        setPosition(_window_width, getY(), getZ());
+    if (getX() > MidiSettings::getWindowWidth()) {
+        setPosition(MidiSettings::getWindowWidth(), getY(), getZ());
         _velocity.x *= -1.0;
     } else if (getX() < 0) {
         setPosition(0, getY(), getZ());
@@ -63,13 +60,10 @@ void    Particle::draw() {
     ofMaterial::end();
 }
 
-void    Particle::windowResized(int width, int height) {
-    _window_width = width;
-    _window_height = height;
-    
-    setPosition(rand() % _window_width, rand() % _window_height, 0);
+void    Particle::windowResized() {
+    setPosition(rand() % MidiSettings::getWindowWidth(), rand() % MidiSettings::getWindowHeight(), 0);
         
-    const float size = _window_width * _window_height * _window_to_size_ratio;
+    const float size = MidiSettings::getWindowWidth() * MidiSettings::getWindowHeight() * _window_to_size_ratio;
     setWidth(size);
     setHeight(size);
 }

@@ -23,8 +23,6 @@ private:
     float                   _angle;
     float                   _max_y;
     
-    float                   calcMaxY(int window_height);
-
 public:
     DecoratorLight(Base* midi_note);
         
@@ -33,7 +31,7 @@ public:
     virtual void    newPress(int velocity) override;
     virtual void    update() override;
     virtual void    draw() override;
-    virtual void    windowResized(int width, int height) override;
+    virtual void    windowResized() override;
 };
 
 }

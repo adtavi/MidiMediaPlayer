@@ -9,11 +9,11 @@
 
 using namespace MidiGlobal;
 
-Light::Light(int width, int height) : Base(width, height) {
+Light::Light() {
     _num_keys = 0;
     setAmbientColor(ofColor(0, 31, 31));
     setDiffuseColor(ofColor(0, 31, 31));
-    setPosition(_window_width/2, 0, 0);
+    setPosition(MidiSettings::getWindowWidth()/2, 0, 0);
     setPointLight();
     
     _constant_attenuation_rate = (_max_constant_attenuation - _min_constant_attenuation) / 20;
@@ -62,9 +62,6 @@ bool    Light::toDelete() const {
     return false;
 }
 
-void    Light::windowResized(int width, int height) {
-    _window_width = width;
-    _window_height = height;
-
-    setPosition(_window_width/2, 0, 0);
+void    Light::windowResized() {
+    setPosition(MidiSettings::getWindowWidth()/2, 0, 0);
 }

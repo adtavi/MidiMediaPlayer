@@ -7,14 +7,10 @@
 
 #include "MidiNote.hpp"
 
-//using FooNSAlias = Foo;//alias
-
-MidiNote::MidiNote::MidiNote(int pitch, int velocity, int width, int height) : Base() {
+MidiNote::MidiNote::MidiNote(int pitch, int velocity) : Base() {
     _pitch = pitch;
     _velocity = velocity;
     _on = true;
-    _window_width = width;
-    _window_height = height;
 }
 
 bool    MidiNote::MidiNote::isOn() const {
@@ -50,16 +46,6 @@ void    MidiNote::MidiNote::draw() {
     return;
 }
 
-void    MidiNote::MidiNote::windowResized(int width, int height) {
-    _window_width = width;
-    _window_height = height;
+void    MidiNote::MidiNote::windowResized() {
     return;
-}
-
-int     MidiNote::MidiNote::getWindowWidth() const {
-    return _window_width;
-}
-
-int     MidiNote::MidiNote::getWindowHeight() const {
-    return _window_height;
 }

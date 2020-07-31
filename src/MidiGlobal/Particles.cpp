@@ -8,9 +8,9 @@
 
 using namespace MidiGlobal;
 
-Particles::Particles(int width, int height) : Base(width, height) {
+Particles::Particles() {
     resize(_num_particles);
-    for_each(begin(), end(), bind(mem_fn(&Particle::init), placeholders::_1, width, height));
+    for_each(begin(), end(), mem_fn(&Particle::init));
 }
 
 void    Particles::midiNoteOn() {
@@ -37,6 +37,6 @@ bool    Particles::toDelete() const {
     return false;
 }
 
-void    Particles::windowResized(int width, int height) {
-    for_each(begin(), end(), bind(mem_fn(&Particle::windowResized), placeholders::_1, width, height));
+void    Particles::windowResized() {
+    for_each(begin(), end(), mem_fn(&Particle::windowResized));
 }

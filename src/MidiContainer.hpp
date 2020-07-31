@@ -11,6 +11,7 @@
 #include <memory>
 
 #include "ofxMidiMessage.h"
+#include "MidiSettings.hpp"
 #include "MidiGlobal/Light.hpp"
 #include "Particles.hpp"
 #include "MidiNote.hpp"
@@ -21,8 +22,6 @@
 class MidiContainer {
     list<unique_ptr<MidiNote::Base>>        _midi_notes;
     list<unique_ptr<MidiGlobal::Base>>      _midi_note_global;
-    int                                     _window_width;
-    int                                     _window_height;
     
 public:
     MidiContainer(int window_width, int window_height);

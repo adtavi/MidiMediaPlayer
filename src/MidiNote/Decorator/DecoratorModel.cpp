@@ -15,12 +15,10 @@ DecoratorModel::DecoratorModel(Base* midi_note) : Decorator(midi_note) {
     
     // @TODO: Remove relative path
     if (ofxAssimpModelLoader::loadModel("../../data/Starmie/pm0121_00.dae")) {
-        //setScale(.1f, .1f, .1f);
-        //setRotation(0, 180.f, 1.f, 0.f, 0.f);
-        _max_y = calcMaxY(_midi_note->getWindowHeight());
-        setPosition((_midi_note->getPitch() - MidiNote::_min_pitch) * _midi_note->getWindowWidth() / MidiNote::_num_keys, _max_y, 0);
+        _max_y = MidiSettings::calcYByVelocity(_midi_note->getVelocity());
+        setPosition((_midi_note->getPitch() - MidiSettings::getMinPitch()) * MidiSettings::getKeyWidth(), _max_y, 0);
 
-        float scale = _window_to_scale_ratio * _midi_note->getWindowHeight() * _midi_note->getWindowWidth();
+        float scale = _window_to_scale_ratio * MidiSettings::getWindowHeight() * MidiSettings::getWindowWidth();
         setScale(scale, scale, scale);
     }
 }
@@ -34,7 +32,7 @@ void    DecoratorModel::setOff() {
 }
 
 void    DecoratorModel::newPress(int velocity) {
-    _max_y = calcMaxY(_midi_note->getWindowHeight());
+    _max_y = MidiSettings::calcYByVelocity(velocity);
     _midi_note->newPress(velocity);
 }
 
@@ -57,17 +55,12 @@ void    DecoratorModel::draw() {
     _midi_note->draw();
 }
 
-float   DecoratorModel::calcMaxY(int window_height) {
-    return window_height - (_midi_note->getVelocity() + 35) * (window_height/MidiNote::_num_vel);
-}
-
-void    DecoratorModel::windowResized(int width, int height) {
-    _max_y = calcMaxY(height);
-    float y = getPosition().y * height / _midi_note->getWindowHeight();  // Relative y to the new height
-    setPosition((_midi_note->getPitch() - MidiNote::_min_pitch) * width / MidiNote::_num_keys, y, 0);
+void    DecoratorModel::windowResized() {
+    _max_y = MidiSettings::calcYByVelocity(_midi_note->getVelocity());
+    setPosition((_midi_note->getPitch() - MidiSettings::getMinPitch()) * MidiSettings::getKeyWidth(), getPosition().y, 0);
     
-    float scale = _window_to_scale_ratio * _midi_note->getWindowHeight() * _midi_note->getWindowWidth();
+    float scale = _window_to_scale_ratio * MidiSettings::getWindowHeight() * MidiSettings::getWindowWidth();
     setScale(scale, scale, scale);
     
-    _midi_note->windowResized(width, height);
+    _midi_note->windowResized();
 }
