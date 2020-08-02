@@ -1,51 +1,51 @@
 //
 //  MidiNote.cpp
-//  midi_media_player
+//  MidiMediaPlayer
 //
 //  Created by Adriel Taboada on 18/07/2020.
 //
 
 #include "MidiNote.hpp"
 
-MidiNote::MidiNote::MidiNote(int pitch, int velocity) : Base() {
+MidiNote::MidiNote(int pitch, int velocity) : MidiNoteBase() {
     _pitch = pitch;
     _velocity = velocity;
     _on = true;
 }
 
-bool    MidiNote::MidiNote::isOn() const {
+bool    MidiNote::is_on() const {
     return _on;
 }
 
-int     MidiNote::MidiNote::getPitch() const {
+int     MidiNote::get_pitch() const {
     return _pitch;
 }
 
-int     MidiNote::MidiNote::getVelocity() const {
+int     MidiNote::get_velocity() const {
     return _velocity;
 }
 
-bool    MidiNote::MidiNote::toDelete() const {
+bool    MidiNote::to_delete() const {
     return !_on;
 }
 
-void    MidiNote::MidiNote::setOff() {
+void    MidiNote::set_off() {
     _on = false;
 }
 
-void    MidiNote::MidiNote::newPress(int velocity) {
+void    MidiNote::new_press(int velocity) {
     _on = true;
     _velocity = velocity;
 }
 
-void    MidiNote::MidiNote::update() {
+void    MidiNote::update() {
     return;
 }
 
-void    MidiNote::MidiNote::draw() {
+void    MidiNote::draw() {
     return;
 }
 
-void    MidiNote::MidiNote::windowResized() {
+void    MidiNote::window_resized() {
     return;
 }

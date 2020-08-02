@@ -1,5 +1,5 @@
 //
-//  MidiNoteLight.hpp
+//  MidiNoteDecorator.hpp
 //  MidiMediaPlayer
 //
 //  Created by Adriel Taboada on 20/07/2020.
@@ -8,12 +8,11 @@
 #pragma once
 
 #include "ofLight.h"
-#include "Decorator.hpp"
+#include "MidiNoteDecorator.hpp"
 
-namespace MidiNote {
+class MidiNoteDecoratorLight: public ofLight, public MidiNoteDecorator {
+    friend class    TestMidiNoteDecoratorLight;
 
-class DecoratorLight: public ofLight, public Decorator {
-private:
     static constexpr float  _boom_rate = 5.0f;
     static constexpr float  _max_angle = 20.f;
     static constexpr float  _min_angle = 10.f;
@@ -24,14 +23,12 @@ private:
     float                   _max_y;
     
 public:
-    DecoratorLight(Base* midi_note);
+    MidiNoteDecoratorLight(MidiNoteBase* midi_note);
         
-    virtual bool    toDelete() const override;
-    virtual void    setOff() override;
-    virtual void    newPress(int velocity) override;
+    virtual bool    to_delete() const override;
+    virtual void    set_off() override;
+    virtual void    new_press(int velocity) override;
     virtual void    update() override;
     virtual void    draw() override;
-    virtual void    windowResized() override;
+    virtual void    window_resized() override;
 };
-
-}

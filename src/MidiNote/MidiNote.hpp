@@ -1,16 +1,14 @@
 //
 //  MidiNote.hpp
-//  midi_media_player
+//  MidiMediaPlayer
 //
 //  Created by Adriel Taboada on 18/07/2020.
 //
 #pragma once
 
-#include "Base.hpp"
+#include "MidiNoteBase.hpp"
 
-namespace MidiNote {
-
-class MidiNote: public Base {
+class MidiNote: public MidiNoteBase {
     
 private:
     int                 _pitch;             // Pitch value
@@ -20,15 +18,13 @@ private:
 public:
     MidiNote(int pitch, int velocity);
     
-    virtual bool        isOn() const override;
-    virtual int         getPitch() const override;
-    virtual int         getVelocity() const override;
-    virtual bool        toDelete() const override;
-    virtual void        setOff() override;
-    virtual void        newPress(int velocity) override;
+    virtual bool        is_on() const override;
+    virtual int         get_pitch() const override;
+    virtual int         get_velocity() const override;
+    virtual bool        to_delete() const override;
+    virtual void        set_off() override;
+    virtual void        new_press(int velocity) override;
     virtual void        update() override;
     virtual void        draw() override;
-    virtual void        windowResized() override;
+    virtual void        window_resized() override;
 };
-
-}

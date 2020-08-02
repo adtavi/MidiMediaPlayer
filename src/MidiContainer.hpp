@@ -1,5 +1,5 @@
 //
-//  MidiNotes.hpp
+//  MidiContainer.hpp
 //  MidiMediaPlayer
 //
 //  Created by Adriel Taboada on 19/07/2020.
@@ -12,24 +12,28 @@
 
 #include "ofxMidiMessage.h"
 #include "MidiSettings.hpp"
-#include "MidiGlobal/Light.hpp"
-#include "Particles.hpp"
+#include "MidiGlobalLight.hpp"
+#include "MidiGlobalParticles.hpp"
 #include "MidiNote.hpp"
-#include "DecoratorModel.hpp"
-#include "DecoratorLight.hpp"
-#include "DecoratorSphere.hpp"
+#include "MidiNoteDecoratorModel.hpp"
+#include "MidiNoteDecoratorLight.hpp"
+#include "MidiNoteDecoratorSphere.hpp"
 
 class MidiContainer {
-    list<unique_ptr<MidiNote::Base>>        _midi_notes;
-    list<unique_ptr<MidiGlobal::Base>>      _midi_note_global;
+    friend class TestMidiContainer;
+
+    list<unique_ptr<MidiNoteBase>>      _midi_notes;
+    list<unique_ptr<MidiGlobalBase>>    _midi_note_global;
+    
+    void    process_midi_note_on(const ofxMidiMessage & message);
+    void    process_midi_note_off(const ofxMidiMessage & message);
+    void    process_midi_control_change(const ofxMidiMessage & message);
     
 public:
     MidiContainer(int window_width, int window_height);
     
-    void    processMidiNoteOn(const ofxMidiMessage & message);
-    void    processMidiNoteOff(const ofxMidiMessage & message);
-    void    processMidiControlChange(const ofxMidiMessage & message);
+    void    process_midi_message(ofxMidiMessage & message);
     void    update();
     void    draw();
-    void    windowResized(int width, int height);
+    void    window_resized(int width, int height);
 };

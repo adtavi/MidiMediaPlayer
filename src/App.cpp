@@ -1,7 +1,7 @@
-#include "ofApp.h"
+#include "App.h"
 
 //--------------------------------------------------------------
-void ofApp::setup(){
+void App::setup(){
     ofSetVerticalSync(true);
     ofBackground(0, 0, 0);
     ofSetLogLevel(OF_LOG_SILENT);
@@ -38,29 +38,24 @@ void ofApp::setup(){
 }
 
 //--------------------------------------------------------------
-void ofApp::update(){
+void App::update(){
     _elapsed_update = (ofGetElapsedTimeMicros() - _elapsed_time);
     _elapsed_time = ofGetElapsedTimeMicros();
     
-    MidiNote::DecoratorSphere::updateGlobal();
+    MidiNoteDecoratorSphere::update_global();
     
     while (!_midi_messages.empty()) {
         auto message = _midi_messages.front();
         
         _delta_acc += message.deltatime;
         
-        if (message.status == MIDI_NOTE_ON) {
-            _delta = _delta_acc * 1000;
-            _delta_acc = 0;
-            
-            _midi_notes->processMidiNoteOn(message);
-        } else if (message.status == MIDI_NOTE_OFF) {
-            _midi_notes->processMidiNoteOff(message);
-        } else if (MIDI_CONTROL_CHANGE) {
-            _midi_notes->processMidiControlChange(message);
-        }
-        else {
-            cout << message.toString() << std::endl;
+        //_delta = _delta_acc * 1000;
+        //_delta_acc = 0;
+        
+        try {
+            _midi_notes->process_midi_message(message);
+        } catch (exception & ex) {
+            cout << "Error: " << ex.what() << endl;
         }
         
         _midi_messages.pop();
@@ -70,12 +65,12 @@ void ofApp::update(){
 }
 
 //--------------------------------------------------------------
-void ofApp::draw(){
+void App::draw(){
     _midi_notes->draw();
 }
 
 //--------------------------------------------------------------
-void ofApp::exit() {
+void App::exit() {
     // clean up
     _midi_in.closePort();
     _midi_in.removeListener(this);
@@ -83,11 +78,11 @@ void ofApp::exit() {
 }
 
 //--------------------------------------------------------------
-void ofApp::newMidiMessage(ofxMidiMessage& msg) {
+void App::newMidiMessage(ofxMidiMessage& msg) {
     // add the latest message to the message queue
     _midi_messages.push(msg);
 }
 
-void ofApp::windowResized(int width, int height) {
-    _midi_notes->windowResized(width, height);
+void App::windowResized(int width, int height) {
+    _midi_notes->window_resized(width, height);
 }

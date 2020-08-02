@@ -1,15 +1,13 @@
 //
-//  MidiNoteParticle.cpp
+//  MidiGlobalParticle.cpp
 //  MidiMediaPlayer
 //
 //  Created by Adriel Taboada on 21/07/2020.
 //
 
-#include "Particle.hpp"
+#include "MidiGlobalParticle.hpp"
 
-using namespace MidiGlobal;
-
-Particle::Particle() {
+MidiGlobalParticle::MidiGlobalParticle() {
     // Material
     setAmbientColor(ofFloatColor::black);
     setDiffuseColor(ofFloatColor::gold);
@@ -17,36 +15,36 @@ Particle::Particle() {
     setShininess(0);
 }
 
-void    Particle::init() {
+void    MidiGlobalParticle::init() {
     // Random velocity
     _velocity.x = ofRandom(-0.2, 0.2);
     _velocity.y = ofRandom(0, 0.6);
     _velocity.z = 0;
     
     // Initial random pos
-    setPosition(rand() % MidiSettings::getWindowWidth(), rand() % MidiSettings::getWindowHeight(), 0);
+    setPosition(rand() % MidiSettings::get_window_width(), rand() % MidiSettings::get_window_height(), 0);
     
     // Random orientation
     setOrientation(glm::vec3(rand() % 360, rand() % 360, rand() % 360));
     
     // Size
-    const float size = MidiSettings::getWindowWidth() * MidiSettings::getWindowHeight() * _window_to_size_ratio;
+    const float size = MidiSettings::get_window_width() * MidiSettings::get_window_height() * _window_to_size_ratio;
     setWidth(size);
     setHeight(size);
 }
 
-void    Particle::update() {
+void    MidiGlobalParticle::update() {
     // Update position
     setPosition(getPosition() + _velocity);
     
     // If it went out of screen, move it upwards
-    if (getY() + _velocity.y > MidiSettings::getWindowHeight()) {
+    if (getY() + _velocity.y > MidiSettings::get_window_height()) {
         setPosition(getX(), 0, getZ());
     }
     
     // Check if it goes out of bound for width
-    if (getX() > MidiSettings::getWindowWidth()) {
-        setPosition(MidiSettings::getWindowWidth(), getY(), getZ());
+    if (getX() > MidiSettings::get_window_width()) {
+        setPosition(MidiSettings::get_window_width(), getY(), getZ());
         _velocity.x *= -1.0;
     } else if (getX() < 0) {
         setPosition(0, getY(), getZ());
@@ -54,16 +52,16 @@ void    Particle::update() {
     }
 }
 
-void    Particle::draw() {
+void    MidiGlobalParticle::draw() {
     ofMaterial::begin();
     ofPlanePrimitive::draw();
     ofMaterial::end();
 }
 
-void    Particle::windowResized() {
-    setPosition(rand() % MidiSettings::getWindowWidth(), rand() % MidiSettings::getWindowHeight(), 0);
+void    MidiGlobalParticle::window_resized() {
+    setPosition(rand() % MidiSettings::get_window_width(), rand() % MidiSettings::get_window_height(), 0);
         
-    const float size = MidiSettings::getWindowWidth() * MidiSettings::getWindowHeight() * _window_to_size_ratio;
+    const float size = MidiSettings::get_window_width() * MidiSettings::get_window_height() * _window_to_size_ratio;
     setWidth(size);
     setHeight(size);
 }

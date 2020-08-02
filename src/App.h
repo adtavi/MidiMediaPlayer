@@ -4,7 +4,7 @@
 #include "ofxMidi.h"
 #include "MidiContainer.hpp"
 
-class ofApp : public ofBaseApp, public ofxMidiListener {
+class App : public ofBaseApp, public ofxMidiListener {
     
     MidiContainer*          _midi_notes;
     ofxMidiIn               _midi_in;

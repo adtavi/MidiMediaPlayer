@@ -1,5 +1,5 @@
 //
-//  MidiNoteParticle.hpp
+//  MidiGlobalParticle.hpp
 //  MidiMediaPlayer
 //
 //  Created by Adriel Taboada on 21/07/2020.
@@ -11,10 +11,9 @@
 #include "ofMaterial.h"
 #include "MidiSettings.hpp"
 
-namespace MidiGlobal {
-
-class Particle: public ofPlanePrimitive, ofMaterial {
-private:
+class MidiGlobalParticle: public ofPlanePrimitive, ofMaterial {
+    friend class TestMidiGlobalParticle;
+    
     static constexpr float  _min_z = -100;
     static constexpr float  _max_z = 100;
     static constexpr float  _window_to_size_ratio = 0.0000026;
@@ -22,12 +21,10 @@ private:
     glm::vec3               _velocity;
     
 public:
-    Particle();
+    MidiGlobalParticle();
     
     void                    init();
     void                    update();
     void                    draw();
-    void                    windowResized();
+    void                    window_resized();
 };
-
-}

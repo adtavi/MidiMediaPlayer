@@ -1,5 +1,5 @@
 //
-//  MidiNoteGlobalLight.hpp
+//  MidiGlobalLight.hpp
 //  MidiMediaPlayer
 //
 //  Created by Adriel Taboada on 22/07/2020.
@@ -7,13 +7,12 @@
 #pragma once
 
 #include "ofLight.h"
-#include "Base.hpp"
+#include "MidiGlobalBase.hpp"
 
-namespace MidiGlobal {
-
-class Light: private ofLight, public Base {
+class MidiGlobalLight: private ofLight, public MidiGlobalBase {
+    friend class TestMidiGlobalLight;
     
-    unsigned int            _num_keys;
+    int                     _num_keys;
     
     float                   _constant_attenuation;
     static constexpr float  _min_constant_attenuation = .5f;
@@ -26,15 +25,13 @@ class Light: private ofLight, public Base {
     float                   _linear_attenuation_rate;
     
 public:
-    Light();
+    MidiGlobalLight();
     
-    virtual void        midiNoteOn() override;
-    virtual void        midiNoteOff() override;
-    virtual void        midiControlChange() override;
+    virtual void        midi_note_on() override;
+    virtual void        midi_note_off() override;
+    virtual void        midi_control_change() override;
     virtual void        update() override;
     virtual void        draw() override;
-    virtual bool        toDelete() const override;
-    virtual void        windowResized() override;
+    virtual bool        to_delete() const override;
+    virtual void        window_resized() override;
 };
-
-}

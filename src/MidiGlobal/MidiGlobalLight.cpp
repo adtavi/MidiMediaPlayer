@@ -1,26 +1,27 @@
 //
-//  MidiNoteGlobalLight.cpp
+//  MidiGlobalLight.cpp
 //  MidiMediaPlayer
 //
 //  Created by Adriel Taboada on 22/07/2020.
 //
 
-#include "Light.hpp"
+#include "MidiGlobalLight.hpp"
 
-using namespace MidiGlobal;
-
-Light::Light() {
+MidiGlobalLight::MidiGlobalLight() {
     _num_keys = 0;
     setAmbientColor(ofColor(0, 31, 31));
     setDiffuseColor(ofColor(0, 31, 31));
-    setPosition(MidiSettings::getWindowWidth()/2, 0, 0);
+    setPosition(MidiSettings::get_window_width()/2, 0, 0);
     setPointLight();
     
+    _constant_attenuation = _max_constant_attenuation;
+    _linear_attenuation = _max_linear_attenuation;
+
     _constant_attenuation_rate = (_max_constant_attenuation - _min_constant_attenuation) / 20;
     _linear_attenuation_rate = (_max_linear_attenuation - _min_linear_attenuation) / 20;
 }
 
-void    Light::midiNoteOn() {
+void    MidiGlobalLight::midi_note_on() {
     _constant_attenuation = _min_constant_attenuation;
     _linear_attenuation = _min_linear_attenuation;
     setAttenuation(_constant_attenuation, _linear_attenuation);
@@ -29,8 +30,8 @@ void    Light::midiNoteOn() {
     enable();
 }
 
-void    Light::midiNoteOff() {
-    _num_keys--;
+void    MidiGlobalLight::midi_note_off() {
+    _num_keys = max(-_num_keys, 0);
     
     // If there are no keys pressed, disable light
     if (_num_keys == 0) {
@@ -38,11 +39,11 @@ void    Light::midiNoteOff() {
     }
 }
 
-void    Light::midiControlChange() {
+void    MidiGlobalLight::midi_control_change() {
     return;
 }
 
-void    Light::update() {
+void    MidiGlobalLight::update() {
     if (_constant_attenuation < _max_constant_attenuation) {
         _constant_attenuation += _constant_attenuation_rate;
     }
@@ -54,14 +55,14 @@ void    Light::update() {
     setAttenuation(_constant_attenuation, _linear_attenuation);
 }
 
-void    Light::draw() {
+void    MidiGlobalLight::draw() {
     return;
 }
 
-bool    Light::toDelete() const {
+bool    MidiGlobalLight::to_delete() const {
     return false;
 }
 
-void    Light::windowResized() {
-    setPosition(MidiSettings::getWindowWidth()/2, 0, 0);
+void    MidiGlobalLight::window_resized() {
+    setPosition(MidiSettings::get_window_width()/2, 0, 0);
 }

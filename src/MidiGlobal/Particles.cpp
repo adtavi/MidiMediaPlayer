@@ -1,42 +1,46 @@
 //
-//  MidiNoteParticles.cpp
+//  Particles.cpp
 //  MidiMediaPlayer
 //
 //  Created by Adriel Taboada on 22/07/2020.
 //
-#include "Particles.hpp"
+#include "MidiGlobalParticles.hpp"
 
 using namespace MidiGlobal;
 
-Particles::Particles() {
-    resize(_num_particles);
-    for_each(begin(), end(), mem_fn(&Particle::init));
+MidiGlobalParticles::MidiGlobalParticles() {
+    _particles.resize(_num_particles);
+    for_each(_particles.begin(), _particles.end(), mem_fn(&Particle::init));
 }
 
-void    Particles::midiNoteOn() {
+void    MidiGlobalParticles::midiNoteOn() {
     return;
 }
 
-void    Particles::midiNoteOff() {
+void    MidiGlobalParticles::midiNoteOff() {
     return;
 }
 
-void    Particles::midiControlChange() {
+void    MidiGlobalParticles::midiControlChange() {
     return;
 }
 
-void    Particles::update() {
-    for_each(begin(), end(), mem_fn(&Particle::update));
+void    MidiGlobalParticles::update() {
+    for_each(_particles.begin(), _particles.end(), mem_fn(&Particle::update));
 }
 
-void    Particles::draw() {
-    for_each(begin(), end(), mem_fn(&Particle::draw));
+void    MidiGlobalParticles::draw() {
+    for_each(_particles.begin(), _particles.end(), mem_fn(&Particle::draw));
 }
 
-bool    Particles::toDelete() const {
+bool    MidiGlobalParticles::toDelete() const {
     return false;
 }
 
-void    Particles::windowResized() {
-    for_each(begin(), end(), mem_fn(&Particle::windowResized));
+unsigned int    MidiGlobalParticles::size() const {
+    return _particles.size();
+}
+
+void    MidiGlobalParticles::windowResized() {
+    for_each(_particles.begin(), _particles.end(), mem_fn(&Particle::windowResized));
 }

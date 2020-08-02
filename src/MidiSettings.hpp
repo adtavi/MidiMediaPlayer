@@ -15,7 +15,7 @@ private:
     // Midi keyboard
     static constexpr int    _num_keys = 87;     // Number of keys on the keyboard
     static constexpr int    _min_pitch = 21;    // Pitch value of first key [21- 108]
-    static constexpr int    _num_vel = 99;      // Keyboard has 99 degrees of velocity
+    static constexpr int    _num_vel = 100;      // Keyboard has 99 degrees of velocity
 
     static bool             _pedal;             // Whether the pedal is being pressed
     
@@ -27,19 +27,20 @@ private:
     
 public:
     // Midi keyboard
-    static int              getNumKeys();
-    static int              getMinPitch();
-    static int              getNumVel();
+    static int              get_num_keys();
+    static int              get_min_pitch();
+    static int              get_num_vel();
     
     // Pedal
-    static void             setPedal(bool pedal);
-    static bool             isPedal();
+    static void             set_pedal(bool pedal);
+    static bool             is_pedal();
     
     // Window
-    static void             setWindow(int width, int height);
-    static int              getWindowWidth();
-    static int              getWindowHeight();
-    static float            getVelocityHeight();
-    static float            getKeyWidth();
-    static float            calcYByVelocity(int velocity);
+    static void             set_window(int width, int height);
+    static int              get_window_width();
+    static int              get_window_height();
+    static float            get_velocity_height();
+    static float            get_key_width();
+    static float            calc_y_by_velocity(int velocity);
+    static float            calc_x_by_pitch(int pitch);
 };
