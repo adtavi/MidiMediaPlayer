@@ -80,6 +80,14 @@ public:
     float get_x() {
         return _light->getX();
     }
+    
+    float get_y() {
+        return _light->getY();
+    }
+    
+    float get_z() {
+        return _light->getZ();
+    }
 };
 
 TEST_CASE_METHOD(TestMidiGlobalLight, "TestMidiGlobalLight", "[MidiGlobalLight]" ) {
@@ -94,6 +102,9 @@ TEST_CASE_METHOD(TestMidiGlobalLight, "TestMidiGlobalLight", "[MidiGlobalLight]"
     REQUIRE(get_linear_attenuation() == get_max_linear_attenuation());
     
     REQUIRE(get_x() == MidiSettings::get_window_width()/static_cast<float>(2));
+    REQUIRE(get_y() == 0);
+    REQUIRE(get_z() == -MidiSettings::get_window_depth()/static_cast<float>(2));
+
     REQUIRE(get_num_keys() == 0);
 }
 
@@ -144,4 +155,6 @@ TEST_CASE_METHOD(TestMidiGlobalLight,"TestMidiGlobalLight::window_resized", "[Mi
     MidiSettings::set_window(500, 500);
     window_resized();
     REQUIRE(get_x() == width/2);
+    REQUIRE(get_y() == 0);
+    REQUIRE(get_z() == -height/static_cast<float>(2));
 }

@@ -22,7 +22,7 @@ void    MidiGlobalParticle::init() {
     _velocity.z = 0;
     
     // Initial random pos
-    setPosition(rand() % MidiSettings::get_window_width(), rand() % MidiSettings::get_window_height(), 0);
+    setPosition(rand() % MidiSettings::get_window_width(), rand() % MidiSettings::get_window_height(), -1 * (rand() % MidiSettings::get_window_depth()));
     
     // Random orientation
     setOrientation(glm::vec3(rand() % 360, rand() % 360, rand() % 360));
@@ -59,8 +59,8 @@ void    MidiGlobalParticle::draw() {
 }
 
 void    MidiGlobalParticle::window_resized() {
-    setPosition(rand() % MidiSettings::get_window_width(), rand() % MidiSettings::get_window_height(), 0);
-        
+    setPosition(rand() % MidiSettings::get_window_width(), rand() % MidiSettings::get_window_height(), -1 * (rand() % MidiSettings::get_window_depth()));
+    
     const float size = MidiSettings::get_window_width() * MidiSettings::get_window_height() * _window_to_size_ratio;
     setWidth(size);
     setHeight(size);

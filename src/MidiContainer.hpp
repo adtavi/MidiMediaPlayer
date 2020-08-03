@@ -14,6 +14,7 @@
 #include "MidiSettings.hpp"
 #include "MidiGlobalLight.hpp"
 #include "MidiGlobalParticles.hpp"
+#include "MidiGlobalFloor.hpp"
 #include "MidiNote.hpp"
 #include "MidiNoteDecoratorModel.hpp"
 #include "MidiNoteDecoratorLight.hpp"

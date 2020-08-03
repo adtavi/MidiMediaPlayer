@@ -14,8 +14,8 @@
 class MidiNoteDecoratorSphere: public ofSpherePrimitive, public MidiNoteDecorator, public ofMaterial {
     friend class    TestMidiNoteDecoratorSphere;
     
-    static constexpr float  _y_vel_slow = 1;
-    static constexpr float  _y_vel_fast = 10;
+    static constexpr float  _vel_slow = 1;
+    static constexpr float  _vel_fast = 10;
     
     float           _min_y;             // Minimum y position
     bool            _decrease_y;        // Ball moving upwards

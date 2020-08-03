@@ -83,12 +83,12 @@ public:
         return _decorator_sphere.get()->update();
     }
     
-    float get_y_vel_slow() {
-        return _decorator_sphere.get()->_y_vel_slow;
+    float get_vel_slow() {
+        return _decorator_sphere.get()->_vel_slow;
     }
     
-    float get_y_vel_fast() {
-        return _decorator_sphere.get()->_y_vel_fast;
+    float get_vel_fast() {
+        return _decorator_sphere.get()->_vel_fast;
     }
 };
 
@@ -111,8 +111,11 @@ TEST_CASE_METHOD(TestMidiNoteDecoratorSphere, "update_global", "[MidiNoteDecorat
 }
 
 TEST_CASE_METHOD(TestMidiNoteDecoratorSphere, "MidiNoteDecoratorSphere::to_delete", "[MidiNoteDecoratorSphere]" ) {
-    set_position(glm::vec3(0, MidiSettings::get_window_height() + 1, 0));
     REQUIRE_FALSE(to_delete());
+    set_position(glm::vec3(0, MidiSettings::get_window_height() + 1, 0));
+    REQUIRE(to_delete());
+    set_position(glm::vec3(0, MidiSettings::get_window_height() + 1, MidiSettings::get_window_depth() + 1));
+    REQUIRE(to_delete());
     set_off();
     REQUIRE(to_delete());
 }
@@ -139,8 +142,8 @@ TEST_CASE_METHOD(TestMidiNoteDecoratorSphere, "update_decrease_y", "[MidiNoteDec
     update();
     REQUIRE(get_decrease_y());
     REQUIRE(get_position().x == position.x);
-    REQUIRE(get_position().y == position.y - get_y_vel_fast() * MidiSettings::get_velocity_height());
-    REQUIRE(get_position().z == position.z);
+    REQUIRE(get_position().y == position.y - get_vel_fast() * MidiSettings::get_velocity_height());
+    REQUIRE(get_position().z == position.z - get_vel_fast());
 }
 
 TEST_CASE_METHOD(TestMidiNoteDecoratorSphere, "update_min_y", "[MidiNoteDecoratorSphere]" ) {
@@ -150,8 +153,8 @@ TEST_CASE_METHOD(TestMidiNoteDecoratorSphere, "update_min_y", "[MidiNoteDecorato
     update();
     REQUIRE_FALSE(get_decrease_y());
     REQUIRE(get_position().x == position.x);
-    REQUIRE(get_position().y == position.y - get_y_vel_fast() * MidiSettings::get_velocity_height());
-    REQUIRE(get_position().z == position.z);
+    REQUIRE(get_position().y == position.y - get_vel_fast() * MidiSettings::get_velocity_height());
+    REQUIRE(get_position().z == position.z - get_vel_fast());
 }
 
 
@@ -161,14 +164,14 @@ TEST_CASE_METHOD(TestMidiNoteDecoratorSphere, "update_false_decrease_y", "[MidiN
     update();
     REQUIRE_FALSE(get_decrease_y());
     REQUIRE(get_position().x == position.x);
-    REQUIRE(get_position().y == position.y - get_y_vel_fast() * MidiSettings::get_velocity_height());
-    REQUIRE(get_position().z == position.z);
+    REQUIRE(get_position().y == position.y - get_vel_fast() * MidiSettings::get_velocity_height());
+    REQUIRE(get_position().z == position.z - get_vel_fast());
     position = get_position();
     update();
     REQUIRE_FALSE(get_decrease_y());
     REQUIRE(get_position().x == position.x);
-    REQUIRE(get_position().y == position.y + get_y_vel_slow() * MidiSettings::get_velocity_height());
-    REQUIRE(get_position().z == position.z);
+    REQUIRE(get_position().y == position.y + get_vel_slow() * MidiSettings::get_velocity_height());
+    REQUIRE(get_position().z == position.z - get_vel_fast());
 }
 
 TEST_CASE_METHOD(TestMidiNoteDecoratorSphere, "update_slow", "[MidiNoteDecoratorSphere]" ) {
@@ -178,8 +181,8 @@ TEST_CASE_METHOD(TestMidiNoteDecoratorSphere, "update_slow", "[MidiNoteDecorator
     update();
     REQUIRE_FALSE(get_decrease_y());
     REQUIRE(get_position().x == position.x);
-    REQUIRE(get_position().y == position.y + get_y_vel_fast() * MidiSettings::get_velocity_height());
-    REQUIRE(get_position().z == position.z);
+    REQUIRE(get_position().y == position.y + get_vel_fast() * MidiSettings::get_velocity_height());
+    REQUIRE(get_position().z == position.z - get_vel_slow());
 }
 
 TEST_CASE_METHOD(TestMidiNoteDecoratorSphere, "window_resized", "[MidiNoteDecoratorSphere]" ) {

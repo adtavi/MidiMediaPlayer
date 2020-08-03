@@ -40,12 +40,12 @@ public:
 };
 
 TEST_CASE_METHOD(TestMidiContainer, "MidiContainer", "[MidiContainer]" ) {
-    REQUIRE(get_num_global() == 2);
+    REQUIRE(get_num_global() == 3);
     REQUIRE(get_num_notes() == 0);
 }
 
 TEST_CASE_METHOD(TestMidiContainer, "process_midi_note_on", "[MidiContainer]") {
-    REQUIRE(get_num_global() == 2);
+    REQUIRE(get_num_global() == 3);
     REQUIRE(get_num_notes() == 0);
     
     ofxMidiMessage message;

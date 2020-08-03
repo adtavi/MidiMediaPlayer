@@ -11,11 +11,9 @@
 #include "ofMaterial.h"
 #include "MidiSettings.hpp"
 
-class MidiGlobalParticle: public ofPlanePrimitive, ofMaterial {
+class MidiGlobalParticle: private ofPlanePrimitive, ofMaterial {
     friend class TestMidiGlobalParticle;
     
-    static constexpr float  _min_z = -100;
-    static constexpr float  _max_z = 100;
     static constexpr float  _window_to_size_ratio = 0.0000026;
     
     glm::vec3               _velocity;

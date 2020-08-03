@@ -84,7 +84,7 @@ public:
     }
     
     float get_angle() {
-        return _decorator_model.get()->getRotationAngle(1);
+        return _decorator_model.get()->getRotationAngle(_decorator_model.get()->_rot_angle_index);
     }
     
     void init() {

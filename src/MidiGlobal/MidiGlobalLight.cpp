@@ -11,7 +11,7 @@ MidiGlobalLight::MidiGlobalLight() {
     _num_keys = 0;
     setAmbientColor(ofColor(0, 31, 31));
     setDiffuseColor(ofColor(0, 31, 31));
-    setPosition(MidiSettings::get_window_width()/2, 0, 0);
+    setPosition(MidiSettings::get_window_width()/2, 0, -MidiSettings::get_window_depth()/2);
     setPointLight();
     
     _constant_attenuation = _max_constant_attenuation;
@@ -64,5 +64,5 @@ bool    MidiGlobalLight::to_delete() const {
 }
 
 void    MidiGlobalLight::window_resized() {
-    setPosition(MidiSettings::get_window_width()/2, 0, 0);
+    setPosition(MidiSettings::get_window_width()/2, 0, -MidiSettings::get_window_depth()/2);
 }

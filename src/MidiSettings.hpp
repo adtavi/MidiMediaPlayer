@@ -7,6 +7,10 @@
 
 #pragma once
 
+#include <string>
+
+using namespace std;
+
 class MidiSettings
 {
 private:
@@ -22,8 +26,11 @@ private:
     // Window size
     static int              _window_width;      // Window width
     static int              _window_height;     // Window height
+    static int              _window_depth;      // Window depth
     static float            _velocity_height;   // Amount of height for each velocity value
     static float            _key_width;         // Window width for each key
+    
+    static std::string      _data_path;         // Path were the model and textures are
     
 public:
     // Midi keyboard
@@ -39,8 +46,13 @@ public:
     static void             set_window(int width, int height);
     static int              get_window_width();
     static int              get_window_height();
+    static int              get_window_depth();
     static float            get_velocity_height();
     static float            get_key_width();
     static float            calc_y_by_velocity(int velocity);
     static float            calc_x_by_pitch(int pitch);
+    
+    // Data path
+    static void             set_data_path(const char * data_path);
+    static const string&    get_data_path();
 };

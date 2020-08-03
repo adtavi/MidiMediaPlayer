@@ -16,7 +16,7 @@ MidiNoteDecoratorSphere::MidiNoteDecoratorSphere(MidiNoteBase* midi_note) : Midi
     
     _min_y = MidiSettings::calc_y_by_velocity(_midi_note->get_velocity());
     _decrease_y = true;
-        
+    
     // Radius relative to window width and velocity
     setRadius(calc_radius_by_velocity(_midi_note->get_velocity()));
     
@@ -34,7 +34,8 @@ void    MidiNoteDecoratorSphere::update_global() {
 }
 
 bool    MidiNoteDecoratorSphere::to_delete() const {
-    return getY() > MidiSettings::get_window_height() && _midi_note->to_delete();
+    return getY() > MidiSettings::get_window_height()
+    || getZ() > MidiSettings::get_window_depth();
 }
 
 void    MidiNoteDecoratorSphere::set_off() {
@@ -53,22 +54,33 @@ void    MidiNoteDecoratorSphere::new_press(int velocity) {
 
 void    MidiNoteDecoratorSphere::update() {
     // Moving...
-    float amount = 0.f;
-        
+    float boom_amount = 0.f;
+    
     if (_decrease_y) { // Moving upwards
-        amount = -_y_vel_fast * MidiSettings::get_velocity_height();
+        boom_amount = -_vel_fast * MidiSettings::get_velocity_height();
         _decrease_y = getY() > _min_y;
     } else {
         if (MidiSettings::is_pedal() || _midi_note->is_on()) {
-            amount = _y_vel_slow * MidiSettings::get_velocity_height();
+            boom_amount = _vel_slow * MidiSettings::get_velocity_height();
         }
         else {
-            amount = _y_vel_fast * MidiSettings::get_velocity_height();
+            boom_amount = _vel_fast * MidiSettings::get_velocity_height();
         }
     }
     
-    boom(amount);
-
+    boom(boom_amount);
+    
+    float dolly_amount;
+    
+    if (MidiSettings::is_pedal() || _midi_note->is_on()) {
+        dolly_amount = - _midi_note->get_velocity() / _vel_fast;
+    }
+    else {
+        dolly_amount = -_vel_slow;
+    }
+    
+    dolly(dolly_amount);
+    
     _midi_note->update();
 }
 
@@ -85,10 +97,10 @@ void    MidiNoteDecoratorSphere::window_resized() {
     setPosition(MidiSettings::calc_x_by_pitch(_midi_note->get_pitch()), _min_y, 0);
     // New size
     setRadius(calc_radius_by_velocity(_midi_note->get_velocity()));
-
+    
     _midi_note->window_resized();
 }
 
 float    MidiNoteDecoratorSphere::calc_radius_by_velocity(int velocity) {
-        return MidiSettings::get_key_width()/2 + (MidiSettings::get_key_width()/2) * (velocity/100);
+    return MidiSettings::get_key_width() + MidiSettings::get_key_width() * (velocity/100);
 }

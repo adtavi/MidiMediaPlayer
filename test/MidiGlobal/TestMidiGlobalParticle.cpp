@@ -72,8 +72,8 @@ TEST_CASE_METHOD(TestMidiGlobalParticle, "TestMidiGlobalParticle::init", "[MidiG
     
     REQUIRE((get_position().x >= 0 && get_position().x <= MidiSettings::get_window_width()));
     REQUIRE((get_position().y >= 0 && get_position().y <= MidiSettings::get_window_height()));
-    REQUIRE(get_position().z == 0);
-    
+    REQUIRE((get_position().z >= -MidiSettings::get_window_height() && get_position().z <= 0));
+
     REQUIRE((get_orientation().x > -180 && get_orientation().x <= 180));
     REQUIRE((get_orientation().y > -180 && get_orientation().y <= 180));
     REQUIRE((get_orientation().z > -180 && get_orientation().z <= 180));
@@ -152,7 +152,7 @@ TEST_CASE_METHOD(TestMidiGlobalParticle, "TestMidiGlobalParticle::window_resized
     
     REQUIRE((get_position().x >= 0 && get_position().x <= MidiSettings::get_window_width()));
     REQUIRE((get_position().y >= 0 && get_position().y <= MidiSettings::get_window_height()));
-    REQUIRE(get_position().z == 0);
+    REQUIRE((get_position().z >= -MidiSettings::get_window_height() && get_position().z <= 0));
     
     const float size = MidiSettings::get_window_width() * MidiSettings::get_window_height() * get_window_to_size_ratio();
     REQUIRE(get_width() == size);

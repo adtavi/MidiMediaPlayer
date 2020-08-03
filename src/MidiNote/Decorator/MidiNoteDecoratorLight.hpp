@@ -21,9 +21,10 @@ class MidiNoteDecoratorLight: public ofLight, public MidiNoteDecorator {
     ofColor                 _color;
     float                   _angle;
     float                   _max_y;
+    ofNode*                 _look_at_node;
     
 public:
-    MidiNoteDecoratorLight(MidiNoteBase* midi_note);
+    MidiNoteDecoratorLight(MidiNoteBase* midi_note, ofNode * node = nullptr);
         
     virtual bool    to_delete() const override;
     virtual void    set_off() override;
@@ -31,4 +32,10 @@ public:
     virtual void    update() override;
     virtual void    draw() override;
     virtual void    window_resized() override;
+    
+    void            look_at_node();
+    void            set_position_node();
+
+    void            look_at_no_node();
+    void            set_position_no_node();
 };
