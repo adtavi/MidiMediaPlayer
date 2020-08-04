@@ -86,6 +86,18 @@ public:
     float get_spotlight() {
         return _decorator_light.get()->getSpotlightCutOff();
     }
+    
+    glm::vec3 get_orientation() {
+        return _decorator_light.get()->getOrientationEulerDeg();
+    }
+    
+    void set_position() {
+        return _decorator_light.get()->set_position();
+    }
+    
+    void look_at() {
+        return _decorator_light.get()->look_at();
+    }
 };
 
 TEST_CASE_METHOD(TestMidiNoteDecoratorLight, "MidiNoteDecoratorLight", "[MidiNoteDecoratorLight]" ) {
@@ -145,8 +157,26 @@ TEST_CASE_METHOD(TestMidiNoteDecoratorLight, "MidiNoteDecoratorLight::update", "
 }
 
 TEST_CASE_METHOD(TestMidiNoteDecoratorLight, "MidiNoteDecoratorLight::window_resized", "[MidiNoteDecoratorLight]" ) {
+    new_press(50);
+    update();
+    auto position = get_position();
     MidiSettings::set_window(500, 200);
     window_resized();
+    REQUIRE(get_max_y() == MidiSettings::calc_y_by_velocity(get_velocity()));
+    REQUIRE(get_position().x == MidiSettings::calc_x_by_pitch(get_pitch()));
+    REQUIRE(get_position().y == position.y);
+    REQUIRE(get_position().z == 0);
+}
+
+TEST_CASE_METHOD(TestMidiNoteDecoratorLight, "MidiNoteDecoratorLight::look_at", "[MidiNoteDecoratorLight]" ) {
+    look_at();
+    REQUIRE(get_orientation().x == Approx(90).epsilon(0.001));
+    REQUIRE(get_orientation().y == 0);
+    REQUIRE(get_orientation().z == 0);
+}
+
+TEST_CASE_METHOD(TestMidiNoteDecoratorLight, "MidiNoteDecoratorLight::set_position", "[MidiNoteDecoratorLight]" ) {
+    set_position();
     REQUIRE(get_max_y() == MidiSettings::calc_y_by_velocity(get_velocity()));
     REQUIRE(get_position().x == MidiSettings::calc_x_by_pitch(get_pitch()));
     REQUIRE(get_position().y == MidiSettings::calc_y_by_velocity(get_velocity()));

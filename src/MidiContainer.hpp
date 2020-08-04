@@ -18,6 +18,7 @@
 #include "MidiNote.hpp"
 #include "MidiNoteDecoratorModel.hpp"
 #include "MidiNoteDecoratorLight.hpp"
+#include "MidiNoteDecoratorLightLookAtNode.hpp"
 #include "MidiNoteDecoratorSphere.hpp"
 
 class MidiContainer {

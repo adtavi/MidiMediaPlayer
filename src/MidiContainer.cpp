@@ -39,7 +39,7 @@ void MidiContainer::process_midi_note_on(const ofxMidiMessage & message) {
         // Decorating note
         MidiNote * midi_note_concrete = new MidiNote(message.pitch, message.velocity);
         MidiNoteDecoratorSphere * midi_note_sphere = new MidiNoteDecoratorSphere(midi_note_concrete);
-        MidiNoteDecoratorLight * midi_note_light = new MidiNoteDecoratorLight(midi_note_sphere, midi_note_sphere);
+        MidiNoteDecoratorLightLookAtNode * midi_note_light = new MidiNoteDecoratorLightLookAtNode(midi_note_sphere, midi_note_sphere);
         _midi_notes.push_back(move(make_unique<MidiNoteDecoratorModel>(midi_note_light, midi_note_sphere)));
     }
     

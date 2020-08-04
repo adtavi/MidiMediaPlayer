@@ -10,9 +10,8 @@
 #include "ofLight.h"
 #include "MidiNoteDecorator.hpp"
 
-class MidiNoteDecoratorLight: public ofLight, public MidiNoteDecorator {
-    friend class    TestMidiNoteDecoratorLight;
-
+class MidiNoteDecoratorLightBase: public ofLight, public MidiNoteDecorator {
+protected:
     static constexpr float  _boom_rate = 5.0f;
     static constexpr float  _max_angle = 20.f;
     static constexpr float  _min_angle = 10.f;
@@ -21,10 +20,9 @@ class MidiNoteDecoratorLight: public ofLight, public MidiNoteDecorator {
     ofColor                 _color;
     float                   _angle;
     float                   _max_y;
-    ofNode*                 _look_at_node;
     
 public:
-    MidiNoteDecoratorLight(MidiNoteBase* midi_note, ofNode * node = nullptr);
+    MidiNoteDecoratorLightBase(MidiNoteBase* midi_note);
         
     virtual bool    to_delete() const override;
     virtual void    set_off() override;
@@ -33,9 +31,6 @@ public:
     virtual void    draw() override;
     virtual void    window_resized() override;
     
-    void            look_at_node();
-    void            set_position_node();
-
-    void            look_at_no_node();
-    void            set_position_no_node();
+    virtual void    look_at() = 0;
+    virtual void    set_position() = 0;
 };

@@ -152,7 +152,7 @@ TEST_CASE_METHOD(TestMidiGlobalLight,"to_delete", "[MidiGlobalLight]" ) {
 TEST_CASE_METHOD(TestMidiGlobalLight,"TestMidiGlobalLight::window_resized", "[MidiGlobalLight]" ) {
     int width = 500;
     int height = 500;
-    MidiSettings::set_window(500, 500);
+    MidiSettings::set_window(width, height);
     window_resized();
     REQUIRE(get_x() == width/2);
     REQUIRE(get_y() == 0);
