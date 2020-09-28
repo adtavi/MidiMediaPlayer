@@ -17,5 +17,5 @@ void    MidiNoteDecoratorLightLookAtNode::look_at() {
 }
 
 void    MidiNoteDecoratorLightLookAtNode::set_position() {
-    setPosition(MidiSettings::calc_x_by_pitch(_midi_note->get_pitch()), MidiSettings::calc_y_by_velocity(_midi_note->get_velocity()), - MidiSettings::get_window_depth() / 2);
+    setPosition(MidiSettings::calc_x_by_pitch(_midi_note->get_pitch()), MidiSettings::calc_y_by_velocity(_midi_note->get_velocity()), 0);
 }

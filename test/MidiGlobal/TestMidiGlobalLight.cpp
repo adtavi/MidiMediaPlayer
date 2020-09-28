@@ -18,18 +18,6 @@ public:
         _light = make_unique<MidiGlobalLight>();
     };
     
-    void midi_note_on() {
-        _light->midi_note_on();
-    }
-    
-    void midi_note_off() {
-        _light->midi_note_off();
-    }
-    
-    void midi_control_change() {
-        _light->midi_control_change();
-    }
-    
     bool to_delete() {
         _light->to_delete();
     }
@@ -38,12 +26,8 @@ public:
         _light->window_resized();
     }
     
-    void update() {
-        _light->update();
-    }
-    
-    float get_constant_attenuation(){
-        return _light->_constant_attenuation;
+    void update(uint64_t delta_pedal, uint64_t time_since_update) {
+        _light->update(delta_pedal, time_since_update);
     }
     
     float get_min_constant_attenuation(){
@@ -54,12 +38,8 @@ public:
         return _light->_max_constant_attenuation;
     }
     
-    float get_constant_attenuation_rate() {
-        return _light->_constant_attenuation_rate;
-    }
-    
-    float get_linear_attenuation(){
-        return _light->_linear_attenuation;
+    float get_constant_attenuation() {
+        return _light->getAttenuationConstant();
     }
     
     float get_min_linear_attenuation(){
@@ -70,11 +50,16 @@ public:
         return _light->_max_linear_attenuation;
     }
     
-    float get_linear_attenuation_rate() {
-        return _light->_linear_attenuation_rate;
+    float get_linear_attenuation() {
+        return _light->getAttenuationLinear();
     }
-    int get_num_keys() {
-        return _light->_num_keys;
+    
+    float get_delta() {
+        return _light->_delta;
+    }
+    
+    float get_delta_acc() {
+        return _light->_delta_acc;
     }
     
     float get_x() {
@@ -88,61 +73,67 @@ public:
     float get_z() {
         return _light->getZ();
     }
+    
+    bool get_dimming() {
+        return _light->_dimming;
+    }
 };
 
 TEST_CASE_METHOD(TestMidiGlobalLight, "TestMidiGlobalLight", "[MidiGlobalLight]" ) {
     REQUIRE(get_min_constant_attenuation() == .5f);
     REQUIRE(get_max_constant_attenuation() == 1.f);
-    REQUIRE(get_constant_attenuation_rate() == (get_max_constant_attenuation() - get_min_constant_attenuation()) / 20);
-    REQUIRE(get_constant_attenuation() == get_max_constant_attenuation());
+
     
     REQUIRE(get_max_linear_attenuation() == 0.01f);
     REQUIRE(get_min_linear_attenuation() == 0.001f);
-    REQUIRE(get_linear_attenuation_rate() == (get_max_linear_attenuation() - get_min_linear_attenuation()) / 20);
-    REQUIRE(get_linear_attenuation() == get_max_linear_attenuation());
-    
+
     REQUIRE(get_x() == MidiSettings::get_window_width()/static_cast<float>(2));
     REQUIRE(get_y() == 0);
-    REQUIRE(get_z() == -MidiSettings::get_window_depth()/static_cast<float>(2));
-
-    REQUIRE(get_num_keys() == 0);
-}
-
-TEST_CASE_METHOD(TestMidiGlobalLight, "midi_note_on", "[MidiGlobalLight]") {
-    midi_note_on();
-    
-    REQUIRE(get_constant_attenuation() == get_min_constant_attenuation());
-    REQUIRE(get_linear_attenuation() == get_min_linear_attenuation());
-    REQUIRE(get_num_keys() == 1);
-    
-    midi_note_on();
-    REQUIRE(get_num_keys() == 2);
-}
-
-TEST_CASE_METHOD(TestMidiGlobalLight,"midi_note_off", "[MidiGlobalLight]" ) {
-    midi_note_on();
-    REQUIRE(get_num_keys() == 1);
-    
-    midi_note_off();
-    REQUIRE(get_num_keys() == 0);
-    
-    midi_note_off();
-    REQUIRE(get_num_keys() == 0);
+    REQUIRE(get_z() == 0);
 }
 
 TEST_CASE_METHOD(TestMidiGlobalLight,"update", "[MidiGlobalLight]" ) {
-    REQUIRE(get_constant_attenuation() == get_max_constant_attenuation());
-    REQUIRE(get_linear_attenuation() == get_max_linear_attenuation());
     
-    midi_note_on();
-    
+    REQUIRE_FALSE(get_dimming());
+    uint64_t delta_pedal = 7;
+    uint64_t time_since_update = 2;
+    update(delta_pedal, time_since_update);
+    REQUIRE(get_delta() == delta_pedal);
+    REQUIRE(get_delta_acc() == delta_pedal);
+    REQUIRE(get_dimming());
     REQUIRE(get_constant_attenuation() == get_min_constant_attenuation());
     REQUIRE(get_linear_attenuation() == get_min_linear_attenuation());
     
-    update();
+    float delta_acc = delta_pedal - time_since_update;
+    update(delta_pedal, time_since_update);
+    REQUIRE(get_delta() == delta_pedal);
+    REQUIRE(get_delta_acc() == delta_acc);
+    REQUIRE(get_dimming());
+    REQUIRE(get_constant_attenuation() == get_max_constant_attenuation() - (get_max_constant_attenuation() - get_min_constant_attenuation()) * delta_acc/delta_pedal);
+    REQUIRE(Approx(get_linear_attenuation()).epsilon(.00001f) == get_max_linear_attenuation() - (get_max_linear_attenuation() - get_min_linear_attenuation()) * delta_acc/delta_pedal);
     
-    REQUIRE(get_constant_attenuation() == get_min_constant_attenuation() + get_constant_attenuation_rate());
-    REQUIRE(get_linear_attenuation() == get_min_linear_attenuation() + get_linear_attenuation_rate());
+    delta_acc = delta_pedal - 2*time_since_update;
+    update(delta_pedal, time_since_update);
+    REQUIRE(get_delta() == delta_pedal);
+    REQUIRE(get_delta_acc() == delta_acc);
+    REQUIRE(get_dimming());
+    REQUIRE(get_constant_attenuation() == get_max_constant_attenuation() - (get_max_constant_attenuation() - get_min_constant_attenuation()) * delta_acc/delta_pedal);
+    REQUIRE(Approx(get_linear_attenuation()).epsilon(.00001f) == get_max_linear_attenuation() - (get_max_linear_attenuation() - get_min_linear_attenuation()) * delta_acc/delta_pedal);
+    
+    
+    delta_acc = delta_pedal - 3*time_since_update;
+    update(delta_pedal, time_since_update);
+    REQUIRE(get_delta() == delta_pedal);
+    REQUIRE(get_delta_acc() == delta_acc);
+    REQUIRE(get_dimming());
+    REQUIRE(get_constant_attenuation() == get_max_constant_attenuation() - (get_max_constant_attenuation() - get_min_constant_attenuation()) * delta_acc/delta_pedal);
+    REQUIRE(get_linear_attenuation() == get_max_linear_attenuation() - (get_max_linear_attenuation() - get_min_linear_attenuation()) * delta_acc/delta_pedal);
+    
+    delta_acc = delta_pedal - (time_since_update - delta_acc);
+    update(0, time_since_update);
+    REQUIRE(get_delta() == 0);
+    REQUIRE(get_delta_acc() == 0);
+    REQUIRE_FALSE(get_dimming());
 }
 
 TEST_CASE_METHOD(TestMidiGlobalLight,"to_delete", "[MidiGlobalLight]" ) {
@@ -156,5 +147,5 @@ TEST_CASE_METHOD(TestMidiGlobalLight,"TestMidiGlobalLight::window_resized", "[Mi
     window_resized();
     REQUIRE(get_x() == width/2);
     REQUIRE(get_y() == 0);
-    REQUIRE(get_z() == -height/static_cast<float>(2));
+    REQUIRE(get_z() == 0);
 }

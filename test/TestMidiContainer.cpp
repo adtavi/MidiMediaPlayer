@@ -34,8 +34,8 @@ public:
         _midi_container.get()->window_resized(width, height);
     }
     
-    void update() {
-        _midi_container.get()->update();
+    void update(uint64_t elapsed_time) {
+        _midi_container.get()->update(elapsed_time);
     }
 };
 
@@ -81,7 +81,7 @@ TEST_CASE_METHOD(TestMidiContainer,"process_midi_note_off", "[MidiContainer]" ) 
     process_midi_message(message);
     REQUIRE(get_num_notes() == 1);
     
-    update();
+    update(0);
     REQUIRE(get_num_notes() == 0);
 }
 

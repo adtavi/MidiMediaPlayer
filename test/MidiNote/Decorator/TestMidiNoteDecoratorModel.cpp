@@ -59,8 +59,8 @@ public:
         return _decorator_model.get()->window_resized();
     }
     
-    void update() {
-        return _decorator_model.get()->update();
+    void update(uint64_t delta_note, uint64_t time_since_update) {
+        return _decorator_model.get()->update(delta_note, time_since_update);
     }
     
     float get_boom_rate() {
@@ -127,7 +127,7 @@ TEST_CASE_METHOD(TestMidiNoteDecoratorModel, "MidiNoteDecoratorModel::update", "
     float angle = get_angle();
     position.y = get_max_y();
     set_position(position);
-    update();
+    update(0, 0);
     REQUIRE(get_position().x == position.x);
     REQUIRE(get_position().y == position.y);
     REQUIRE(get_position().z == 0);
@@ -135,7 +135,7 @@ TEST_CASE_METHOD(TestMidiNoteDecoratorModel, "MidiNoteDecoratorModel::update", "
     
     position.y = get_max_y() + get_boom_rate() * 2;
     set_position(position);
-    update();
+    update(0, 0);
     REQUIRE(get_position().x == position.x);
     REQUIRE(get_position().y == get_max_y() + get_boom_rate());
     REQUIRE(get_position().z == 0);
@@ -143,7 +143,7 @@ TEST_CASE_METHOD(TestMidiNoteDecoratorModel, "MidiNoteDecoratorModel::update", "
 
     position.y = get_max_y() - get_boom_rate() * 2;
     set_position(position);
-    update();
+    update(0, 0);
     REQUIRE(get_position().x == position.x);
     REQUIRE(get_position().y == get_max_y() - get_boom_rate());
     REQUIRE(get_position().z == 0);

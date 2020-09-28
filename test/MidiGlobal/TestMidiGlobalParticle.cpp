@@ -41,11 +41,7 @@ public:
     float get_height() {
         return _particle.get()->getHeight();
     }
-    
-    void init() {
-        _particle.get()->init();
-    }
-    
+        
     void update() {
         _particle.get()->update();
     }
@@ -63,9 +59,7 @@ public:
     }
 };
 
-TEST_CASE_METHOD(TestMidiGlobalParticle, "TestMidiGlobalParticle::init", "[MidiGlobalParticle]" ) {    
-    init();
-    
+TEST_CASE_METHOD(TestMidiGlobalParticle, "MidiGlobalParticle", "[MidiGlobalParticle]" ) {
     REQUIRE((get_velocity().x >= -0.2 && get_velocity().x <= 0.2));
     REQUIRE((get_velocity().y >= 0 && get_velocity().y <= 0.6));
     REQUIRE(get_velocity().z == 0);
@@ -83,9 +77,7 @@ TEST_CASE_METHOD(TestMidiGlobalParticle, "TestMidiGlobalParticle::init", "[MidiG
     REQUIRE(get_height() == size);
 }
 
-TEST_CASE_METHOD(TestMidiGlobalParticle, "TestMidiGlobalParticle::update", "[MidiGlobalParticle]" ) {
-    init();
-    
+TEST_CASE_METHOD(TestMidiGlobalParticle, "MidiGlobalParticle::update", "[MidiGlobalParticle]" ) {    
     glm::vec3 position = get_position();
     glm::vec3 velocity = get_velocity();
     
@@ -96,7 +88,7 @@ TEST_CASE_METHOD(TestMidiGlobalParticle, "TestMidiGlobalParticle::update", "[Mid
     REQUIRE(position.z + velocity.z == get_position().z);
 }
 
-TEST_CASE_METHOD(TestMidiGlobalParticle, "TestMidiGlobalParticle::update_x_min", "[MidiGlobalParticle]" ) {
+TEST_CASE_METHOD(TestMidiGlobalParticle, "MidiGlobalParticle::update_x_min", "[MidiGlobalParticle]" ) {
     float velocity = -0.2;
     
     glm::vec3 position(-1, 0, 0);
@@ -111,7 +103,7 @@ TEST_CASE_METHOD(TestMidiGlobalParticle, "TestMidiGlobalParticle::update_x_min",
     REQUIRE(get_velocity().x == -velocity);
 }
 
-TEST_CASE_METHOD(TestMidiGlobalParticle, "TestMidiGlobalParticle::update_x_max", "[MidiGlobalParticle]" ) {
+TEST_CASE_METHOD(TestMidiGlobalParticle, "MidiGlobalParticle::update_x_max", "[MidiGlobalParticle]" ) {
     float velocity = 0.2;
     
     glm::vec3 position(MidiSettings::get_window_width()+1, 0, 0);
@@ -126,7 +118,7 @@ TEST_CASE_METHOD(TestMidiGlobalParticle, "TestMidiGlobalParticle::update_x_max",
     REQUIRE(get_velocity().x == -velocity);
 }
 
-TEST_CASE_METHOD(TestMidiGlobalParticle, "TestMidiGlobalParticle::update_y_max", "[MidiGlobalParticle]" ) {
+TEST_CASE_METHOD(TestMidiGlobalParticle, "MidiGlobalParticle::update_y_max", "[MidiGlobalParticle]" ) {
     float velocity = 0.2;
     
     glm::vec3 position(0, MidiSettings::get_window_height(), 0);
@@ -141,14 +133,10 @@ TEST_CASE_METHOD(TestMidiGlobalParticle, "TestMidiGlobalParticle::update_y_max",
     REQUIRE(get_velocity().y == velocity);
 }
 
-TEST_CASE_METHOD(TestMidiGlobalParticle, "TestMidiGlobalParticle::window_resized", "[MidiGlobalParticle]") {
+TEST_CASE_METHOD(TestMidiGlobalParticle, "MidiGlobalParticle::window_resized", "[MidiGlobalParticle]") {
     MidiSettings::set_window(2, 2);
     
     window_resized();
-    
-    REQUIRE(get_velocity().x == 0);
-    REQUIRE(get_velocity().y == 0);
-    REQUIRE(get_velocity().z == 0);
     
     REQUIRE((get_position().x >= 0 && get_position().x <= MidiSettings::get_window_width()));
     REQUIRE((get_position().y >= 0 && get_position().y <= MidiSettings::get_window_height()));

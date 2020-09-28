@@ -18,7 +18,7 @@ public:
     virtual void        midi_note_on() = 0;
     virtual void        midi_note_off() = 0;
     virtual void        midi_control_change() = 0;
-    virtual void        update() = 0;
+    virtual void        update(uint64_t delta_pedal, uint64_t time_since_update) = 0;
     virtual void        draw() = 0;
     virtual bool        to_delete() const = 0;
     virtual void        window_resized() = 0;

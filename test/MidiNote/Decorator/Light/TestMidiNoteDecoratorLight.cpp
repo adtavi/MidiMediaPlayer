@@ -63,8 +63,8 @@ public:
         return _decorator_light.get()->window_resized();
     }
     
-    void update() {
-        return _decorator_light.get()->update();
+    void update(uint64_t delta_note, uint64_t time_since_update) {
+        return _decorator_light.get()->update(delta_note, time_since_update);
     }
     
     float get_boom_rate() {
@@ -133,7 +133,7 @@ TEST_CASE_METHOD(TestMidiNoteDecoratorLight, "MidiNoteDecoratorLight::update", "
     glm::vec3 position = get_position();
     position.y = get_max_y();
     set_position(position);
-    update();
+    update(0, 0);
     REQUIRE(get_position().x == position.x);
     REQUIRE(get_position().y == position.y);
     REQUIRE(get_position().z == 0);
@@ -141,7 +141,7 @@ TEST_CASE_METHOD(TestMidiNoteDecoratorLight, "MidiNoteDecoratorLight::update", "
     
     position.y = get_max_y() + get_boom_rate() * 2;
     set_position(position);
-    update();
+    update(0, 0);
     REQUIRE(get_position().x == MidiSettings::calc_x_by_pitch(get_pitch()));
     REQUIRE(get_position().y == get_max_y() + get_boom_rate());
     REQUIRE(get_position().z == 0);
@@ -149,7 +149,7 @@ TEST_CASE_METHOD(TestMidiNoteDecoratorLight, "MidiNoteDecoratorLight::update", "
     
     position.y = get_max_y() - get_boom_rate() * 2;
     set_position(position);
-    update();
+    update(0, 0);
     REQUIRE(get_position().x == MidiSettings::calc_x_by_pitch(get_pitch()));
     REQUIRE(get_position().y == get_max_y() - get_boom_rate());
     REQUIRE(get_position().z == 0);
@@ -158,7 +158,7 @@ TEST_CASE_METHOD(TestMidiNoteDecoratorLight, "MidiNoteDecoratorLight::update", "
 
 TEST_CASE_METHOD(TestMidiNoteDecoratorLight, "MidiNoteDecoratorLight::window_resized", "[MidiNoteDecoratorLight]" ) {
     new_press(50);
-    update();
+    update(0, 0);
     auto position = get_position();
     MidiSettings::set_window(500, 200);
     window_resized();

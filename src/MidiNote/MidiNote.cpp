@@ -38,7 +38,7 @@ void    MidiNote::new_press(int velocity) {
     _velocity = velocity;
 }
 
-void    MidiNote::update() {
+void    MidiNote::update(uint64_t delta_note, uint64_t time_since_update) {
     return;
 }
 

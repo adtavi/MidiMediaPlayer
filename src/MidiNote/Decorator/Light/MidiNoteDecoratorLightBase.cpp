@@ -1,5 +1,5 @@
 //
-//  MidiNoteDecoratorLight.cpp
+//  MidiNoteDecoratorLightBase.cpp
 //  MidiMediaPlayer
 //
 //  Created by Adriel Taboada on 20/07/2020.
@@ -8,9 +8,8 @@
 #include "MidiNoteDecoratorLightBase.hpp"
 
 MidiNoteDecoratorLightBase::MidiNoteDecoratorLightBase(MidiNoteBase* midi_note) : MidiNoteDecorator(midi_note) {
-    _color = ofColor::red;
-    
     // Color
+    _color = ofColor::red;
     setDiffuseColor(_color);
     setSpecularColor(_color);
     setAttenuation(1.f - _midi_note->get_velocity()/500);
@@ -37,7 +36,13 @@ void    MidiNoteDecoratorLightBase::new_press(int velocity) {
     _midi_note->new_press(velocity);
 }
 
-void    MidiNoteDecoratorLightBase::update() {
+void    MidiNoteDecoratorLightBase::update(uint64_t delta_note, uint64_t time_since_update) {
+    boom();
+    look_at();
+    _midi_note->update(delta_note, time_since_update);
+}
+
+void MidiNoteDecoratorLightBase::boom() {
     ofPoint position = getPosition();
     
     if (getY() > _max_y + _boom_rate) {
@@ -50,10 +55,6 @@ void    MidiNoteDecoratorLightBase::update() {
     if (getSpotlightCutOff() > _min_angle) {
         setSpotlightCutOff(spotlight_cutoff-_angle_rate);
     }
-    
-    look_at();
-    
-    _midi_note->update();
 }
 
 void    MidiNoteDecoratorLightBase::draw() {

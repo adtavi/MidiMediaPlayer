@@ -21,7 +21,6 @@ class MidiGlobalParticle: private ofPlanePrimitive, ofMaterial {
 public:
     MidiGlobalParticle();
     
-    void                    init();
     void                    update();
     void                    draw();
     void                    window_resized();

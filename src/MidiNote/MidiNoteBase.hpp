@@ -23,7 +23,7 @@ public:
     virtual bool        to_delete() const = 0;
     virtual void        set_off() = 0;
     virtual void        new_press(int velocity) = 0;
-    virtual void        update() = 0;
+    virtual void        update(uint64_t delta, uint64_t time_since_update) = 0;
     virtual void        draw() = 0;
     virtual void        window_resized() = 0;
 };

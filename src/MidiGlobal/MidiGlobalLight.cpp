@@ -8,51 +8,51 @@
 #include "MidiGlobalLight.hpp"
 
 MidiGlobalLight::MidiGlobalLight() {
-    _num_keys = 0;
     setAmbientColor(ofColor(0, 31, 31));
     setDiffuseColor(ofColor(0, 31, 31));
-    setPosition(MidiSettings::get_window_width()/2, 0, -MidiSettings::get_window_depth()/2);
+    setPosition(MidiSettings::get_window_width()/2, 0, 0);
     setPointLight();
-    
-    _constant_attenuation = _max_constant_attenuation;
-    _linear_attenuation = _max_linear_attenuation;
-
-    _constant_attenuation_rate = (_max_constant_attenuation - _min_constant_attenuation) / 20;
-    _linear_attenuation_rate = (_max_linear_attenuation - _min_linear_attenuation) / 20;
+    disable();
 }
 
 void    MidiGlobalLight::midi_note_on() {
-    _constant_attenuation = _min_constant_attenuation;
-    _linear_attenuation = _min_linear_attenuation;
-    setAttenuation(_constant_attenuation, _linear_attenuation);
-    
-    _num_keys++;
-    enable();
+    return;
 }
 
 void    MidiGlobalLight::midi_note_off() {
-    _num_keys = max(-_num_keys, 0);
-    
-    // If there are no keys pressed, disable light
-    if (_num_keys == 0) {
-        disable();
-    }
+    return;
 }
 
 void    MidiGlobalLight::midi_control_change() {
     return;
 }
 
-void    MidiGlobalLight::update() {
-    if (_constant_attenuation < _max_constant_attenuation) {
-        _constant_attenuation += _constant_attenuation_rate;
+void    MidiGlobalLight::update(uint64_t delta_pedal, uint64_t time_since_update) {
+    // delta > 0 => Pedal's been pressed
+    // _last_delta == 0 => First pedal
+    // _last_delta != delta => Delta changed (pedal's been pressed again)
+    if (delta_pedal > 0 && (_delta == 0 || _delta != delta_pedal)) {
+        _delta = delta_pedal;
+        _delta_acc = _delta;
+        _dimming = true;
+        setAttenuation(_min_constant_attenuation, _min_linear_attenuation);
+        enable();
+    } else if (delta_pedal == 0) {
+        disable();
+    } else if (_dimming) { // If it's dimming
+        
+        if (_delta_acc < time_since_update) {
+            _delta_acc = _delta - (time_since_update - _delta_acc);
+        } else {
+            _delta_acc = _delta_acc - time_since_update;
+        }
+        
+        float percentage = static_cast<float>(_delta_acc) / static_cast<float>(_delta);
+        float constant_attenuation = _max_constant_attenuation - (_max_constant_attenuation - _min_constant_attenuation) * percentage;
+        float linear_attenuation = _max_linear_attenuation - (_max_linear_attenuation - _min_linear_attenuation) * percentage;
+        
+        setAttenuation(constant_attenuation, linear_attenuation);
     }
-    
-    if (_linear_attenuation < _max_linear_attenuation) {
-        _linear_attenuation += _linear_attenuation_rate;
-    }
-    
-    setAttenuation(_constant_attenuation, _linear_attenuation);
 }
 
 void    MidiGlobalLight::draw() {
@@ -64,5 +64,12 @@ bool    MidiGlobalLight::to_delete() const {
 }
 
 void    MidiGlobalLight::window_resized() {
-    setPosition(MidiSettings::get_window_width()/2, 0, -MidiSettings::get_window_depth()/2);
+    setPosition(MidiSettings::get_window_width()/2, 0, 0);
+}
+
+void    MidiGlobalLight::disable() {
+    _delta = 0;
+    _delta_acc = 0;
+    _dimming = false;
+    ofLight::disable();
 }

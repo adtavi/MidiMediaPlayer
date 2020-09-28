@@ -11,7 +11,6 @@ MidiNoteDecoratorModel::MidiNoteDecoratorModel(MidiNoteBase* midi_note, ofNode *
     //Look at
     _look_at_node = node;
     
-    // @TODO: Remove relative path
     if (ofxAssimpModelLoader::loadModel(MidiSettings::get_data_path() + "Starmie/pm0121_00.dae")) {
         init();
     }
@@ -26,7 +25,8 @@ void    MidiNoteDecoratorModel::init() {
     if (_look_at_node == nullptr) {
         setPosition(MidiSettings::calc_x_by_pitch(_midi_note->get_pitch()), _max_y, 0);
     } else {
-        setPosition(MidiSettings::calc_x_by_pitch(_midi_note->get_pitch()), _max_y, -MidiSettings::get_window_depth() / 2);
+        setPosition(MidiSettings::calc_x_by_pitch(_midi_note->get_pitch()), _max_y, 0);
+        //setPosition(MidiSettings::calc_x_by_pitch(_midi_note->get_pitch()), _max_y, -MidiSettings::get_window_depth() / 2);
         look_at_node();
     }
 }
@@ -44,7 +44,7 @@ void    MidiNoteDecoratorModel::new_press(int velocity) {
     _midi_note->new_press(velocity);
 }
 
-void    MidiNoteDecoratorModel::update() {
+void    MidiNoteDecoratorModel::update(uint64_t delta_note, uint64_t time_since_update) {
     ofPoint position = getPosition();
     
     if (position.y > _max_y + _boom_rate) {
@@ -57,7 +57,7 @@ void    MidiNoteDecoratorModel::update() {
         look_at_node();
     
     setRotation(_rot_angle_index, getRotationAngle(_rot_angle_index) + _angle_rate, 0.f, 1.f, 0.f);
-    _midi_note->update();
+    _midi_note->update(delta_note, time_since_update);
 }
 
 void    MidiNoteDecoratorModel::draw() {

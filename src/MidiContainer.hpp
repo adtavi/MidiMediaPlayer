@@ -11,6 +11,7 @@
 #include <memory>
 
 #include "ofxMidiMessage.h"
+#include "TimeManager.hpp"
 #include "MidiSettings.hpp"
 #include "MidiGlobalLight.hpp"
 #include "MidiGlobalParticles.hpp"
@@ -26,6 +27,7 @@ class MidiContainer {
 
     list<unique_ptr<MidiNoteBase>>      _midi_notes;
     list<unique_ptr<MidiGlobalBase>>    _midi_note_global;
+    TimeManager                       _time_container;
     
     void    process_midi_note_on(const ofxMidiMessage & message);
     void    process_midi_note_off(const ofxMidiMessage & message);
@@ -35,7 +37,7 @@ public:
     MidiContainer(int window_width, int window_height);
     
     void    process_midi_message(ofxMidiMessage & message);
-    void    update();
+    void    update(uint64_t elapsed_time);
     void    draw();
     void    window_resized(int width, int height);
 };

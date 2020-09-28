@@ -27,8 +27,8 @@ public:
         return _decorator_sphere.get()->_base_color;
     }
     
-    void update_global() {
-        _decorator_sphere.get()->update_global();
+    void update_color() {
+        _decorator_sphere.get()->update_color();
     }
     
     void set_position(const glm::vec3 & position) {
@@ -67,6 +67,14 @@ public:
         return _decorator_sphere.get()->getRadius();
     }
     
+    float get_min_radius() {
+        return _decorator_sphere.get()->_min_radius;
+    }
+    
+    float get_max_radius() {
+        return _decorator_sphere.get()->_max_radius;
+    }
+    
     bool is_on() {
         return _decorator_sphere.get()->_midi_note->is_on();
     }
@@ -79,8 +87,8 @@ public:
         return _decorator_sphere.get()->window_resized();
     }
     
-    void update() {
-        return _decorator_sphere.get()->update();
+    void update(uint64_t delta_note, uint64_t time_since_update) {
+        return _decorator_sphere.get()->update(delta_note, time_since_update);
     }
     
     float get_vel_slow() {
@@ -89,6 +97,30 @@ public:
     
     float get_vel_fast() {
         return _decorator_sphere.get()->_vel_fast;
+    }
+    
+    tuple<float,float>  calc_radius_by_velocity(int velocity) {
+        return _decorator_sphere.get()->calc_radius_by_velocity(velocity);
+    }
+    
+    uint64_t get_delta() {
+        return _decorator_sphere.get()->_delta;
+    }
+    
+    uint64_t get_delta_acc() {
+        return _decorator_sphere.get()->_delta;
+    }
+    
+    bool get_growing() {
+        return _decorator_sphere.get()->_growing;
+    }
+    
+    bool boom() {
+        _decorator_sphere.get()->boom();
+    }
+    
+    bool dolly() {
+        _decorator_sphere.get()->dolly();
     }
 };
 
@@ -99,13 +131,17 @@ TEST_CASE_METHOD(TestMidiNoteDecoratorSphere, "MidiNoteDecoratorSphere", "[MidiN
     REQUIRE(get_position().z == 0);
     REQUIRE(get_min_y() == MidiSettings::calc_y_by_velocity(get_velocity()));
     REQUIRE(get_decrease_y());
-    REQUIRE(get_radius() == MidiNoteDecoratorSphere::calc_radius_by_velocity(get_velocity()));
+    auto [min_radius, max_radius] = calc_radius_by_velocity(get_velocity());
+    REQUIRE(get_radius() == min_radius);
+    REQUIRE(get_delta() == 0);
+    REQUIRE(get_delta_acc() == 0);
+    REQUIRE_FALSE(get_growing());
 }
 
-TEST_CASE_METHOD(TestMidiNoteDecoratorSphere, "update_global", "[MidiNoteDecoratorSphere]" ) {
+TEST_CASE_METHOD(TestMidiNoteDecoratorSphere, "update_color", "[MidiNoteDecoratorSphere]" ) {
     ofColor color = get_base_color();
-    update_global();
-    REQUIRE(get_base_color().r == color.r);
+    update_color();
+    REQUIRE(get_base_color().r == (color.r + 1) % 62);
     REQUIRE(get_base_color().g == (color.g + 1) % 127);
     REQUIRE(get_base_color().b == 200 + (color.b - 199) % 55);
 }
@@ -129,68 +165,137 @@ TEST_CASE_METHOD(TestMidiNoteDecoratorSphere, "set_off", "[MidiNoteDecoratorSphe
 }
 
 TEST_CASE_METHOD(TestMidiNoteDecoratorSphere, "MidiNoteDecoratorSphere::new_press", "[MidiNoteDecoratorSphere]" ) {
+    auto [min_radius, max_radius] = calc_radius_by_velocity(get_velocity());
     set_position(glm::vec3(get_position().x, 0, get_position().z));
     int velocity = 50;
     new_press(velocity);
     REQUIRE(get_min_y() == MidiSettings::calc_y_by_velocity(get_velocity()));
     REQUIRE_FALSE(get_decrease_y());
-    REQUIRE(get_radius() == MidiNoteDecoratorSphere::calc_radius_by_velocity(get_velocity()));
+    REQUIRE(get_radius() == min_radius);
 }
 
-TEST_CASE_METHOD(TestMidiNoteDecoratorSphere, "update_decrease_y", "[MidiNoteDecoratorSphere]" ) {
+TEST_CASE_METHOD(TestMidiNoteDecoratorSphere, "MidiNoteDecoratorSphere::update", "[MidiNoteDecoratorSphere]" ) {
     glm::vec3 position = get_position();
-    update();
+    update(0,0);
     REQUIRE(get_decrease_y());
-    REQUIRE(get_position().x == position.x);
     REQUIRE(get_position().y == position.y - get_vel_fast() * MidiSettings::get_velocity_height());
     REQUIRE(get_position().z == position.z - get_vel_fast());
+    auto [min_radius, max_radius] = calc_radius_by_velocity(get_velocity());
+    REQUIRE(get_radius() == min_radius);
 }
 
-TEST_CASE_METHOD(TestMidiNoteDecoratorSphere, "update_min_y", "[MidiNoteDecoratorSphere]" ) {
+TEST_CASE_METHOD(TestMidiNoteDecoratorSphere, "boom_decrease_y", "[MidiNoteDecoratorSphere]" ) {
     glm::vec3 position = get_position();
-    position.y = get_min_y();
-    set_position(position);
-    update();
-    REQUIRE_FALSE(get_decrease_y());
-    REQUIRE(get_position().x == position.x);
+    boom();
+    REQUIRE(get_decrease_y());
     REQUIRE(get_position().y == position.y - get_vel_fast() * MidiSettings::get_velocity_height());
-    REQUIRE(get_position().z == position.z - get_vel_fast());
 }
 
 
-TEST_CASE_METHOD(TestMidiNoteDecoratorSphere, "update_false_decrease_y", "[MidiNoteDecoratorSphere]" ) {
+TEST_CASE_METHOD(TestMidiNoteDecoratorSphere, "boom_decrease_y_min_y", "[MidiNoteDecoratorSphere]" ) {
     glm::vec3 position(get_position().x, get_min_y(), get_position().z);
     set_position(position);
-    update();
+    boom();
     REQUIRE_FALSE(get_decrease_y());
-    REQUIRE(get_position().x == position.x);
-    REQUIRE(get_position().y == position.y - get_vel_fast() * MidiSettings::get_velocity_height());
-    REQUIRE(get_position().z == position.z - get_vel_fast());
-    position = get_position();
-    update();
-    REQUIRE_FALSE(get_decrease_y());
-    REQUIRE(get_position().x == position.x);
-    REQUIRE(get_position().y == position.y + get_vel_slow() * MidiSettings::get_velocity_height());
-    REQUIRE(get_position().z == position.z - get_vel_fast());
+    REQUIRE(get_position().y == get_min_y());
 }
 
-TEST_CASE_METHOD(TestMidiNoteDecoratorSphere, "update_slow", "[MidiNoteDecoratorSphere]" ) {
+TEST_CASE_METHOD(TestMidiNoteDecoratorSphere, "boom_increasing_y_fast", "[MidiNoteDecoratorSphere]" ) {
     glm::vec3 position(get_position().x, get_min_y(), get_position().z);
     set_position(position);
     set_off();
-    update();
     REQUIRE_FALSE(get_decrease_y());
-    REQUIRE(get_position().x == position.x);
+    boom();
     REQUIRE(get_position().y == position.y + get_vel_fast() * MidiSettings::get_velocity_height());
+}
+
+TEST_CASE_METHOD(TestMidiNoteDecoratorSphere, "boom_increasing_y_slow", "[MidiNoteDecoratorSphere]" ) {
+    glm::vec3 position(get_position().x, get_min_y(), get_position().z);
+    set_position(position);
+    boom();
+    REQUIRE_FALSE(get_decrease_y());
+    REQUIRE(get_position().y == get_min_y());
+    boom();
+    REQUIRE_FALSE(get_decrease_y());
+    REQUIRE(get_position().y == position.y + get_vel_slow() * MidiSettings::get_velocity_height());
+}
+
+
+TEST_CASE_METHOD(TestMidiNoteDecoratorSphere, "dolly_slow", "[MidiNoteDecoratorSphere]" ) {
+    auto position = get_position();
+    set_off();
+    dolly();
     REQUIRE(get_position().z == position.z - get_vel_slow());
 }
 
+TEST_CASE_METHOD(TestMidiNoteDecoratorSphere, "dolly_fast", "[MidiNoteDecoratorSphere]" ) {
+    auto position = get_position();
+    dolly();
+    REQUIRE(get_position().z == position.z - get_vel_fast());
+}
+
+TEST_CASE_METHOD(TestMidiNoteDecoratorSphere, "set_radius", "[MidiNoteDecoratorSphere]" ) {
+    
+    REQUIRE_FALSE(get_growing());
+    uint64_t delta_note = 7;
+    uint64_t time_since_update = 2;
+    update(delta_note, time_since_update);
+    REQUIRE(get_delta() == delta_note);
+    REQUIRE(get_delta_acc() == delta_note);
+    REQUIRE(get_growing());
+    REQUIRE(get_radius() == get_min_radius());
+    
+    float delta_acc = delta_note - time_since_update;
+    update(delta_note, time_since_update);
+    REQUIRE(get_delta() == delta_note);
+    REQUIRE(get_delta_acc() == delta_note);
+    REQUIRE(get_growing());
+    REQUIRE(Approx(get_radius()) == get_min_radius() + (get_max_radius() - get_min_radius()) * delta_acc/delta_note);
+    
+    delta_acc = delta_note - 2*time_since_update;
+    update(delta_note, time_since_update);
+    REQUIRE(get_delta() == delta_note);
+    REQUIRE(get_delta_acc() == delta_note);
+    REQUIRE(get_growing());
+    REQUIRE(get_radius() == get_min_radius() + (get_max_radius() - get_min_radius()) * delta_acc/delta_note);
+    
+    delta_acc = delta_note - 3*time_since_update;
+    update(delta_note, time_since_update);
+    REQUIRE(get_delta() == delta_note);
+    REQUIRE(get_delta_acc() == delta_note);
+    REQUIRE(get_growing());
+    REQUIRE(get_radius() == get_min_radius() + (get_max_radius() - get_min_radius()) * delta_acc/delta_note);
+    
+    
+    delta_acc = delta_note - (time_since_update - delta_acc);
+    update(delta_note, time_since_update);
+    REQUIRE(get_delta() == delta_note);
+    REQUIRE(get_delta_acc() == delta_note);
+    REQUIRE(get_growing());
+    REQUIRE(get_radius() == get_min_radius() + (get_max_radius() - get_min_radius()) * delta_acc/delta_note);
+    
+    update(0, time_since_update);
+    REQUIRE(get_delta() == 0);
+    REQUIRE(get_delta_acc() == 0);
+    REQUIRE_FALSE(get_growing());
+}
+
 TEST_CASE_METHOD(TestMidiNoteDecoratorSphere, "window_resized", "[MidiNoteDecoratorSphere]" ) {
+    auto [min_radius, max_radius] = calc_radius_by_velocity(get_velocity());
     MidiSettings::set_window(500, 250);
     window_resized();
     REQUIRE(get_min_y() == MidiSettings::calc_y_by_velocity(get_velocity()));
     REQUIRE(get_position().x == MidiSettings::calc_x_by_pitch(get_pitch()));
     REQUIRE(get_position().y == MidiSettings::calc_y_by_velocity(get_velocity()));
     REQUIRE(get_position().z == 0);
-    REQUIRE(get_radius() == MidiNoteDecoratorSphere::calc_radius_by_velocity(get_velocity()));
+    REQUIRE(get_radius() == min_radius);
 }
+
+TEST_CASE_METHOD(TestMidiNoteDecoratorSphere, "calc_radius_by_velocity", "[MidiNoteDecoratorSphere]" ) {
+    int velocity = 100;
+    auto [min_radius, max_radius] = calc_radius_by_velocity(velocity);
+    REQUIRE(min_radius == MidiSettings::get_key_width() + MidiSettings::get_key_width() * (velocity/100.));
+    REQUIRE(max_radius == MidiSettings::get_key_width() + 2 * MidiSettings::get_key_width() * (velocity/100.));
+}
+
+

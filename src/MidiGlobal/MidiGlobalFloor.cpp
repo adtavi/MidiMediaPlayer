@@ -15,8 +15,8 @@ MidiGlobalFloor::MidiGlobalFloor() {
     
     setAmbientColor(ofFloatColor::white);
     setDiffuseColor(ofFloatColor::white);
-    setSpecularColor(ofFloatColor::red);
-    setShininess(0);
+    setSpecularColor(ofFloatColor::white);
+    setShininess(128);
 }
 
 void    MidiGlobalFloor::midi_note_on() {
@@ -31,7 +31,7 @@ void    MidiGlobalFloor::midi_control_change() {
     return;
 }
 
-void    MidiGlobalFloor::update() {
+void    MidiGlobalFloor::update(uint64_t delta_pedal, uint64_t time_since_update) {
 }
 
 void    MidiGlobalFloor::draw() {

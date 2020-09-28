@@ -38,8 +38,8 @@ public:
         _floor->window_resized();
     }
     
-    void update() {
-        _floor->update();
+    void update(uint64_t delta_pedal, uint64_t time_since_update) {
+        _floor->update( delta_pedal, time_since_update);
     }
     
     glm::vec3 get_position() {
@@ -70,9 +70,5 @@ TEST_CASE_METHOD(TestMidiGlobalFloor, "MidiGlobalFloor", "[MidiGlobalFloor]" ) {
     REQUIRE(get_orientation().x == 90);
     REQUIRE(get_orientation().y == 0);
     REQUIRE(get_orientation().z == 0);
-    
-//    setWidth(MidiSettings::get_window_width()*2);
-//    setHeight(MidiSettings::get_window_depth()*2);
-//    setPosition(MidiSettings::get_window_width()/2, MidiSettings::get_window_height(), -MidiSettings::get_window_depth());
 }
 

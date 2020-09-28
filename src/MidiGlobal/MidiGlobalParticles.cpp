@@ -7,8 +7,8 @@
 #include "MidiGlobalParticles.hpp"
 
 MidiGlobalParticles::MidiGlobalParticles() {
-    _particles.resize(_num_particles);
-    for_each(_particles.begin(), _particles.end(), mem_fn(&MidiGlobalParticle::init));
+    for (int i = 0; i < _num_particles; i++)
+        _particles.push_back(std::move(make_unique<MidiGlobalParticle>()));
 }
 
 void    MidiGlobalParticles::midi_note_on() {
@@ -23,7 +23,7 @@ void    MidiGlobalParticles::midi_control_change() {
     return;
 }
 
-void    MidiGlobalParticles::update() {
+void    MidiGlobalParticles::update(uint64_t delta_pedal, uint64_t time_since_update) {
     for_each(_particles.begin(), _particles.end(), mem_fn(&MidiGlobalParticle::update));
 }
 

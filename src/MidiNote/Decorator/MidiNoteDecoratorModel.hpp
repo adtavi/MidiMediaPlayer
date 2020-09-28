@@ -32,7 +32,7 @@ public:
     virtual bool    to_delete() const override;
     virtual void    set_off() override;
     virtual void    new_press(int velocity) override;
-    virtual void    update() override;
+    virtual void    update(uint64_t delta_note, uint64_t time_since_update) override;
     virtual void    draw() override;
     virtual void    window_resized() override;
 };
